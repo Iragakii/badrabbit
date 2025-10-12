@@ -8,7 +8,9 @@ const TrendingTokensCardContainer = () => {
     <>
          <TitleTrendingCard />
          <DescriptionTextTrendingCard />
-         <TrendingCard />
+         <div className="flex w-6xl flex-wrap">
+          <TrendingCard />
+         </div>
     </>
   )
 }

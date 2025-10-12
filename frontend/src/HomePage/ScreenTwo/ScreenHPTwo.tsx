@@ -18,10 +18,7 @@ const SceenHPTwo = () => {
             <Header />
             <div className="p-6 space-y-6">
               <TrendingTokensCardContainer />
-              <TrendingTokensCardContainer />
-              <TrendingTokensCardContainer />
-              <TrendingTokensCardContainer />
-              <TrendingTokensCardContainer />
+            
             </div>
             <Footer />
           </div>

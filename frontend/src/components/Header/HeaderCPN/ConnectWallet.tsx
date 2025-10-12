@@ -6,12 +6,12 @@ const ConnectWallet = () => {
 
   return (
     <>
-      <button
+      <div
         onClick={() => setIsModalOpen(true)}
         className="px-4 py-2 rounded-lg      hover:bg-[#2C5A34] transition-colors text-white cursor-pointer"
       >
         Connect Wallet
-      </button>
+      </div>
 
       <ModalLogin 
         isOpen={isModalOpen}

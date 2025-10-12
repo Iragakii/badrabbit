@@ -1,11 +1,18 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons"
 import SearchInput from "./HeaderCPN/SearchInput"
-import UserIcon from "./HeaderCPN/UserIcon"
 import ConnectWallet from "./HeaderCPN/ConnectWallet"
+import UserIconNotLog from "./HeaderCPN/UserIconNotLog"
+
+import { useAuth } from "../../../Auth/AuthContext"
+
+import WhenUserLogContainer from "./HeaderCPN/WhenUserLoginCPN/WhenUserLogContainer"
+
 
 
 const Header = () => {
+  const { isLoggedIn } = useAuth();
+
   return (
     <>
      <div>
@@ -16,10 +23,16 @@ const Header = () => {
                     <SearchInput></SearchInput>
                 </div>
                 <div className="flex items-center">
-                   <button className="border-r border-r-[#181C14] pr-1 mr-2 ">
-                     <ConnectWallet></ConnectWallet>
-                   </button>
-                    <UserIcon></UserIcon>
+                  {isLoggedIn ? (
+                    <WhenUserLogContainer />
+                  ) : (
+                    <>
+                      <button className="border-r border-r-[#181C14] pr-1 mr-2 ">
+                        <ConnectWallet />
+                      </button>
+                      <UserIconNotLog />
+                    </>
+                  )}
                 </div>
             </div>
         </header>

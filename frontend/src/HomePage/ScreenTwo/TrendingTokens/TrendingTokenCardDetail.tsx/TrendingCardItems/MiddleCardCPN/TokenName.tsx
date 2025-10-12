@@ -1,10 +1,14 @@
 
 
-function TokenName() {
+interface TokenNameProps {
+  name: string;
+}
+
+function TokenName({ name }: TokenNameProps) {
   return (
     <>
      <div className="w-14 truncate text-white font-medium">
-        <span className="text-[17px]"> Super CONAN GOD</span>
+        <span className="text-[17px]">{name}</span>
      </div>
     </>
   )

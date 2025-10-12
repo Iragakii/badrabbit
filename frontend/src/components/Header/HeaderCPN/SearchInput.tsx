@@ -7,7 +7,7 @@ const StyledInput = styled(Input)({
     color: "#84d018ff", // equivalent to text-gray-900
   },
   "&::placeholder": {
-    color: "#515954ff", // equivalent to text-gray-400
+    color: "#18b956ff", // equivalent to text-gray-400
     opacity: 1,
   },
 });
@@ -19,7 +19,7 @@ export default function SearchInput() {
       inputProps={{
         style: { padding: "0 12px" },
       }}
-      className="h-10 w-full max-w-64 text-base focus:outline focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
+      className="h-10 w-full max-w-64 text-base  focus:outline-2 focus:-outline-offset-1 focus:outline-blue-800"
       disableUnderline={true}
     />
   );

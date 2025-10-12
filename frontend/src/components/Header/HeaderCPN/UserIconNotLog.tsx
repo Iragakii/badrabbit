@@ -2,7 +2,7 @@ import { faCircleUser } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "@mui/material/Link";
 
-const UserIcon = () => {
+const UserIconNotLog = () => {
   return (
     <>
       <Link href="/profile" underline="none">
@@ -14,4 +14,4 @@ const UserIcon = () => {
   );
 };
 
-export default UserIcon;
+export default UserIconNotLog;

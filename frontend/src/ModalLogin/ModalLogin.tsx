@@ -1,7 +1,8 @@
 import { Dialog, Transition } from '@headlessui/react'
-import { Fragment } from 'react'
+import { Fragment, useState } from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faWallet, faEnvelope } from "@fortawesome/free-solid-svg-icons"
+import { useAuth } from '../../Auth/AuthContext'
 
 interface ModalLoginProps {
   isOpen: boolean;
@@ -9,6 +10,70 @@ interface ModalLoginProps {
 }
 
 const ModalLogin = ({ isOpen, onClose }: ModalLoginProps) => {
+  const [address, setAddress] = useState<string | null>(null);
+  const [isConnecting, setIsConnecting] = useState(false);
+  const { login } = useAuth();
+
+  async function connectMetaMask() {
+    if (!window.ethereum) {
+      alert("MetaMask not installed!");
+      return;
+    }
+    setIsConnecting(true);
+    try {
+      // 1. Connect MetaMask and get address
+      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+      const wallet = accounts[0];
+      setAddress(wallet);
+      console.log("Connected wallet:", wallet);
+
+      // 2. Request login message from backend
+      const messageRes = await fetch(`http://localhost:8081/api/auth/message?address=${wallet}`);
+      const { message } = await messageRes.json();
+
+      // 3. Sign the message with MetaMask
+      const signature = await window.ethereum.request({
+        method: "personal_sign",
+        params: [message, wallet],
+      });
+
+      // 4. Send signature to backend for verification
+      const verifyRes = await fetch("http://localhost:8081/api/auth/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ address: wallet, signature }),
+      });
+
+      if (verifyRes.ok) {
+        const response = await verifyRes.json();
+        const { token } = response;
+        console.log("Signature verified, JWT issued");
+        login(token); // Update auth state with token
+        // 5. Fetch wallet data after successful auth
+        await fetchTokens(wallet);
+        onClose(); // Close modal after successful connection
+      } else {
+        const error = await verifyRes.json();
+        alert("Verification failed: " + error.error);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Connection failed: " + (err as Error).message);
+    } finally {
+      setIsConnecting(false);
+    }
+  }
+
+  async function fetchTokens(address: string) {
+    try {
+      const res = await fetch(`http://localhost:8081/api/wallet/${address}/erc20`);
+      const json = await res.json();
+      console.log("ERC20 Tokens:", json);
+    } catch (err) {
+      console.error("Failed to fetch tokens:", err);
+    }
+  }
+
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={onClose}>
@@ -45,14 +110,12 @@ const ModalLogin = ({ isOpen, onClose }: ModalLoginProps) => {
 
                 <div className="mt-4 space-y-4">
                   <button
-                    className="w-full flex items-center justify-between p-4 rounded-lg border border-[#181C14] hover:bg-[#181C14] transition-colors text-white cursor-pointer"
-                    onClick={() => {
-                      // Handle MetaMask login
-                      console.log("MetaMask login")
-                    }}
+                    disabled={isConnecting}
+                    className="w-full flex items-center justify-between p-4 rounded-lg border border-[#181C14] hover:bg-[#181C14] transition-colors text-white cursor-pointer disabled:opacity-50"
+                    onClick={connectMetaMask}
                   >
                     <img src="/metamask-icon.png" alt="" className='rounded-full w-8 h-8'/>
-                    <span className="text-lg">Login with MetaMask</span>
+                    <span className="text-lg">{isConnecting ? "Connecting..." : "Login with MetaMask"}</span>
                     <FontAwesomeIcon icon={faWallet} className="h-6 w-6" />
                   </button>
 
