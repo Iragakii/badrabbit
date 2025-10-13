@@ -1,4 +1,4 @@
-package com.example.backend;
+package com.example.backend.Controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +12,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/price")
-@CrossOrigin(origins = "*")
 public class PriceController {
 @GetMapping("/{symbol}")
 public ResponseEntity<?> getPrice(@PathVariable String symbol) {

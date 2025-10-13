@@ -1,4 +1,4 @@
-package com.example.backend;
+package com.example.backend.Controller;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -10,7 +10,6 @@ import org.springframework.web.client.RestTemplate;
 
 @RestController
 @RequestMapping("/api/wallet")
-@CrossOrigin(origins = "*")
 public class WalletController {
 
     @Value("${morali.api.key}")

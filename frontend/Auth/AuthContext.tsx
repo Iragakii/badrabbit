@@ -46,6 +46,17 @@ const getCookie = (name: string): string | null => {
   return null;
 };
 
+// JWT decode utility
+const decodeJWT = (token: string) => {
+  try {
+    const payload = token.split('.')[1];
+    const decoded = JSON.parse(atob(payload));
+    return decoded;
+  } catch (e) {
+    return null;
+  }
+};
+
 const deleteCookie = (name: string) => {
   document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
 };
@@ -55,9 +66,23 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(() => !!getCookie('access_token'));
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    const token = getCookie('access_token');
+    if (token) {
+      const decoded = decodeJWT(token);
+      return decoded && decoded.exp * 1000 > Date.now();
+    }
+    return false;
+  });
   const [token, setToken] = useState<string | null>(() => getCookie('access_token'));
-  const [address, setAddress] = useState<string | null>(() => localStorage.getItem('wallet_address'));
+  const [address, setAddress] = useState<string | null>(() => {
+    const token = getCookie('access_token');
+    if (token) {
+      const decoded = decodeJWT(token);
+      return decoded ? decoded.sub : null;
+    }
+    return localStorage.getItem('wallet_address');
+  });
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [username, setUsername] = useState<string | null>(null);
   const [bio, setBio] = useState<string | null>(null);
@@ -95,12 +120,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       setToken(newToken);
       setIsLoggedIn(true);
-      
+
       // Store token in cookie if not already done by backend
       if (!getCookie('access_token')) {
         document.cookie = `access_token=${newToken};path=/;max-age=86400`;
       }
-      
+
       await fetchAddress();
     } catch (error) {
       console.error('Login error:', error);
@@ -165,51 +190,37 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 useEffect(() => {
     const initializeAuth = async () => {
-      const persistedToken = getCookie('access_token');
-      
-      if (persistedToken) {
-        setToken(persistedToken);
-        setIsLoading(true);
-        
-        try {
-          const res = await axios.get('/api/auth/me', {
-            headers: {
-              Authorization: `Bearer ${persistedToken}`
-            }
-          });
+      setIsLoading(true);
 
-          const { address: walletAddress, avatarUrl, username, bio, website } = res.data;
-          
-          setIsLoggedIn(true);
-          setAddress(walletAddress);
-          setAvatarUrl(avatarUrl);
-          setUsername(username);
-          setBio(bio);
-          setWebsite(website);
-          
-          localStorage.setItem('wallet_address', walletAddress);
-        } catch (error) {
-          console.error('Auth initialization error:', error);
-          if (axios.isAxiosError(error) && error.response?.status === 401) {
-            await logout();
-          }
+      try {
+        // Call /api/auth/me without Authorization header, rely on browser sending httpOnly cookie
+        const res = await axios.get('/api/auth/me');
+
+        const { address: walletAddress, avatarUrl, username, bio, website } = res.data;
+
+        setIsLoggedIn(true);
+        setAddress(walletAddress);
+        setAvatarUrl(avatarUrl);
+        setUsername(username);
+        setBio(bio);
+        setWebsite(website);
+
+        localStorage.setItem('wallet_address', walletAddress);
+      } catch (error) {
+        console.error('Auth initialization error:', error);
+        if (axios.isAxiosError(error) && error.response?.status === 401) {
+          // Token invalid or missing, stay logged out
+          setIsLoggedIn(false);
         }
-         } else {
-        setIsLoggedIn(false);
       }
-      
+
       setIsLoading(false);
     };
 
     initializeAuth();
   }, []);
 
-  // Check token validity on mount
-  useEffect(() => {
-    if (token) {
-      fetchAddress();
-    }
-  }, []);
+
 
   const value = {
     isLoggedIn,
