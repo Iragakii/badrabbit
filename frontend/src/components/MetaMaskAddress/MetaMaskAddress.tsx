@@ -25,7 +25,7 @@ const MetaMaskAddress = () => {
     <>
       <div className="flex min-w-0 items-center gap-2">
         <div className='max-w-full truncate break-all' tabIndex={-1}>
-          <h1 className='font-medium leading-tight min-w-0 select-text truncate text-heading-sm'>
+          <h1 className='!no-underline text-white font-medium leading-tight min-w-0 select-text truncate text-heading-sm'>
             {address ? shortenAddress(address) : ' Wallet Disconnected 🔌'}
           </h1>
         </div>

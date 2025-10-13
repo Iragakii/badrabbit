@@ -1,19 +1,21 @@
 
-import Link from "@mui/material/Link";
+
+
+import { useAuth } from '../../../../../Auth/AuthContext';
 
 const UserAvaWhenLog = () => {
+  const { avatarUrl } = useAuth();
+
   return (
     <>
-      <Link href="/profile" underline="none">
         <button className=" cursor-pointer">
           <img
-      src="/defaultava.png"
+      src={avatarUrl || "/defaultava.png"}
       alt="Token Avatar"
-      className="w-7 h-7 rounded-full object-cover "
+      className="w-full h-full rounded-full object-cover "
     />
         </button>
-      </Link>
-    </>
+      </>
   );
 };
 

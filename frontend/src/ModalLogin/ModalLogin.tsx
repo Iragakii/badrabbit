@@ -28,7 +28,7 @@ const ModalLogin = ({ isOpen, onClose }: ModalLoginProps) => {
       console.log("Connected wallet:", wallet);
 
       // 2. Request login message from backend
-      const messageRes = await fetch(`http://localhost:8081/api/auth/message?address=${wallet}`);
+      const messageRes = await fetch(`/api/auth/message?address=${wallet}`);
       const { message } = await messageRes.json();
 
       // 3. Sign the message with MetaMask
@@ -38,9 +38,10 @@ const ModalLogin = ({ isOpen, onClose }: ModalLoginProps) => {
       });
 
       // 4. Send signature to backend for verification
-      const verifyRes = await fetch("http://localhost:8081/api/auth/verify", {
+      const verifyRes = await fetch("/api/auth/verify", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: 'include',
         body: JSON.stringify({ address: wallet, signature }),
       });
 
@@ -66,7 +67,9 @@ const ModalLogin = ({ isOpen, onClose }: ModalLoginProps) => {
 
   async function fetchTokens(address: string) {
     try {
-      const res = await fetch(`http://localhost:8081/api/wallet/${address}/erc20`);
+      const res = await fetch(`/api/wallet/${address}/erc20`, {
+        credentials: 'include',
+      });
       const json = await res.json();
       console.log("ERC20 Tokens:", json);
     } catch (err) {

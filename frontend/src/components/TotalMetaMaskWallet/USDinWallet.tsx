@@ -31,7 +31,7 @@ const USDinWallet = () => {
             const wethBalance = parseFloat(ethers.formatUnits(wethBalanceWei, decimals));
 
             // Fetch ETH price from backend proxy
-          const response = await fetch('http://localhost:8081/api/price/eth');
+          const response = await fetch('/api/price/eth');
 if (!response.ok) throw new Error('Failed to fetch price');
 const data = await response.json();
 const ethPrice = data.price; // ✅ extract number field

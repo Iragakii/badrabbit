@@ -30,7 +30,9 @@ useEffect(() => {
     <>
       <div className=" h-12 w-auto py-2 flex justify-between gap-3  ">
         <div>
-          <UserAvaWhenLog></UserAvaWhenLog>
+          <div className="w-7 h-7">
+            <UserAvaWhenLog></UserAvaWhenLog>
+          </div>
 
           <div className="relative bottom-[18px] right-[-18px]">
             <MetaMaskAvatar></MetaMaskAvatar>

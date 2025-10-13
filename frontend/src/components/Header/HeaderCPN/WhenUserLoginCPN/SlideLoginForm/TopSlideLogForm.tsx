@@ -26,7 +26,7 @@ const TopSlideLogForm = () => {
   return (
     <>
       <div className="flex gap-3 border-b-1 border-[#181C14] py-3 px-3  rounded-md bg-[#509488] hover:bg-[#202E24]">
-         <div>
+         <div className='w-10 h-10'>
             <UserAvaWhenLog></UserAvaWhenLog>
          </div>
        <div className=" space-y-1">

@@ -10,7 +10,7 @@ const DynamicTokenPrice = ({ price }: DynamicTokenPriceProps) => {
           <span>$</span>
           <div className="w-[39px] break-all shrink-0 overflow-hidden whitespace-nowrap text-clip  ">
             {" "}
-            <span>{price.toFixed(6)}</span>
+            <span>{price.toFixed(3)}</span>
           </div>
         </div>
       </div>
