@@ -1,32 +1,21 @@
-import  { useState, useEffect } from 'react';
-import { ethers } from 'ethers';
+import { useAuth } from "../../../Auth/AuthContext";
+
 
 const MetaMaskAddress = () => {
-  const [address, setAddress] = useState<string | null>(null);
+
+  const { isLoggedIn, address , username } = useAuth();
 
   function shortenAddress(addr: string) {
     return addr.slice(0, 6) ;
   }
 
-  useEffect(() => {
-    async function checkConnection() {
-      if (window.ethereum) {
-        const provider = new ethers.BrowserProvider(window.ethereum);
-        const accounts = await provider.send('eth_accounts', []);
-        if (accounts.length > 0) {
-          setAddress(accounts[0]);
-        }
-      }
-    }
-    checkConnection();
-  }, []);
 
   return (
     <>
       <div className="flex min-w-0 items-center gap-2">
         <div className='max-w-full truncate break-all' tabIndex={-1}>
           <h1 className='!no-underline text-white font-medium leading-tight min-w-0 select-text truncate text-heading-sm'>
-            {address ? shortenAddress(address) : ' Wallet Disconnected 🔌'}
+             {isLoggedIn && address ? (username ? username : shortenAddress(address)) : ' Wallet Disconnected 🔌'}
           </h1>
         </div>
       </div>

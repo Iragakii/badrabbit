@@ -6,12 +6,12 @@ const NavBar = () => {
   return (
     <>
       <div>
-        <nav className="group fixed left-0 bg-[#0C0C0C] text-white h-screen border-r border-[#181C14] w-[55px] hover:w-[200px] transition-all duration-300 ease-in-out">
+        <nav className="group fixed left-0 bg-[#0C0C0C] text-white h-screen border-r border-[#181C14] w-[55px] hover:w-[200px] transition-all duration-300 ease-in-out z-[1000]">
           <div className="container p-2 pt-4 overflow-hidden">
             <Link href="/" underline="none">
               <button className="mb-5 flex items-center gap-3 cursor-pointer whitespace-nowrap w-full">
                 <img
-                  src="/brand-logo.jpg"
+                  src="/brand-logo.jpg" 
                   alt="Brand Logo"
                   className="w-8 h-8 rounded-full object-cover"
                 />

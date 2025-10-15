@@ -8,7 +8,7 @@ const TokenAvatar = () => {
             <img
               src="/tokentestava.jpg"
               alt="MetaMask Avatar"
-              className="w-10 h-10 rounded-full  object-cover"
+              className="!w-10 !h-10 rounded-full  object-cover"
             />
          {/* <FontAwesomeIcon icon={faEthereum} className="text-white" /> */}
         </div>

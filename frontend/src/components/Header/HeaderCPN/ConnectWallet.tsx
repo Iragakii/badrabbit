@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import ModalLogin from '../../../ModalLogin/ModalLogin'
+import ModalLogin from '../../../Modal/ModalLogin/ModalLogin'
+
 
 const ConnectWallet = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)

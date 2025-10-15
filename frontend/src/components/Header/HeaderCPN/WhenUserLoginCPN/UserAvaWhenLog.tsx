@@ -8,7 +8,7 @@ const UserAvaWhenLog = () => {
 
   return (
     <>
-        <button className=" cursor-pointer">
+        <button className="w-full h-full cursor-pointer">
           <img
       src={avatarUrl || "/defaultava.png"}
       alt="Token Avatar"

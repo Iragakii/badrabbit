@@ -26,7 +26,9 @@ interface AuthContextType {
   username: string | null;
   bio: string | null;
   website: string | null;
+  twitter: string | null;
   updateProfile: (username: string, bio: string, website: string) => void;
+  updateTwitter: (twitterUsername: string | null) => void;
   isLoading: boolean;
   error: string | null;
   clearError: () => void;
@@ -86,7 +88,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [username, setUsername] = useState<string | null>(null);
   const [bio, setBio] = useState<string | null>(null);
-  const [website, setWebsite] = useState<string | null>(null);
+  const [website, setWebsite] = useState<string>('');
+  const [twitter, setTwitter] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -137,7 +140,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const fetchAddress = async () => {
     if (!token) return;
-    
+
     setIsLoading(true);
     clearError();
 
@@ -148,14 +151,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
       });
 
-      const { address: walletAddress, avatarUrl, username, bio, website } = res.data;
-      
+      const { address: walletAddress, avatarUrl, username, bio, website, twitter } = res.data;
+
       setAddress(walletAddress);
       setAvatarUrl(avatarUrl);
       setUsername(username);
       setBio(bio);
       setWebsite(website);
-      
+      setTwitter(twitter);
+
       // Store address in localStorage for persistence
       localStorage.setItem('wallet_address', walletAddress);
     } catch (error) {
@@ -171,6 +175,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  const updateTwitter = (twitterUsername: string | null) => {
+    setTwitter(twitterUsername);
+  };
+
   const logout = async () => {
     try {
       await axios.get('/api/auth/logout');
@@ -183,7 +191,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setAvatarUrl(null);
       setUsername(null);
       setBio(null);
-      setWebsite(null);
+      setWebsite('');
+      setTwitter(null);
       deleteCookie('access_token');
       localStorage.removeItem('wallet_address');
     }
@@ -196,7 +205,7 @@ useEffect(() => {
         // Call /api/auth/me without Authorization header, rely on browser sending httpOnly cookie
         const res = await axios.get('/api/auth/me');
 
-        const { address: walletAddress, avatarUrl, username, bio, website } = res.data;
+        const { address: walletAddress, avatarUrl, username, bio, website, twitter } = res.data;
 
         setIsLoggedIn(true);
         setAddress(walletAddress);
@@ -204,6 +213,7 @@ useEffect(() => {
         setUsername(username);
         setBio(bio);
         setWebsite(website);
+        setTwitter(twitter);
 
         localStorage.setItem('wallet_address', walletAddress);
       } catch (error) {
@@ -211,6 +221,13 @@ useEffect(() => {
         if (axios.isAxiosError(error) && error.response?.status === 401) {
           // Token invalid or missing, stay logged out
           setIsLoggedIn(false);
+          setAddress(null);
+          setAvatarUrl(null);
+          setUsername(null);
+          setBio(null);
+          setWebsite('');
+          setTwitter(null);
+          localStorage.removeItem('wallet_address');
         }
       }
 
@@ -234,7 +251,9 @@ useEffect(() => {
     username,
     bio,
     website,
+    twitter,
     updateProfile,
+    updateTwitter,
     isLoading,
     error,
     clearError
