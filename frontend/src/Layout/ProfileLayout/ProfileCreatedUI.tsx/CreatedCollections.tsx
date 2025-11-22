@@ -23,12 +23,12 @@ export default function CreatedCollections() {
   useEffect(() => {
     if (!walletaddress) return;
     fetch(`http://localhost:8081/api/collections/owner/${walletaddress}`)
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         setCollections(data);
         setLoading(false);
       })
-      .catch(err => {
+      .catch((err) => {
         console.error("Error fetching collections:", err);
         setLoading(false);
       });
@@ -39,13 +39,16 @@ export default function CreatedCollections() {
   return (
     <div className=" w-full h-150">
       {collections.length === 0 ? (
-       <div className="space-y-8 flex items-center justify-center"> <DefaultImgCreatedUI></DefaultImgCreatedUI>
-        <TitleaDesCreatedUI></TitleaDesCreatedUI>
-        <CreateColle></CreateColle></div>
+<div className="flex flex-col items-center justify-center space-y-8 h-full">
+          
+          <DefaultImgCreatedUI></DefaultImgCreatedUI>
+          <TitleaDesCreatedUI></TitleaDesCreatedUI>
+          <CreateColle></CreateColle>
+        </div>
       ) : (
-       <div className="">
-        <CreatedCollectionUI></CreatedCollectionUI>
-       </div>
+        <div className="">
+          <CreatedCollectionUI></CreatedCollectionUI>
+        </div>
       )}
     </div>
   );
