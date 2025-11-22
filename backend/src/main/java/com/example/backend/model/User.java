@@ -20,9 +20,10 @@ public class User {
     private String profileImageUrl;
     private String bannerImageUrl;
     private String discord;
-    private String twitter;
+    private TwitterModel twitter;
     private String website;
     private boolean verified;
+    
     private boolean isBanned;
     private String createdAt;
     private String updatedAt;

@@ -5,15 +5,13 @@ import com.example.backend.repository.UserRepository;
 import com.example.backend.utils.SignatureUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
+
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
@@ -27,7 +25,8 @@ public class AuthController {
     @Autowired
     private UserRepository userRepository;
 
-    private static final SecretKey SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    @Autowired
+    private javax.crypto.SecretKey jwtSecretKey;
     private final Map<String, String> pendingMessages = new ConcurrentHashMap<>();
 
     @GetMapping("/message")
@@ -60,7 +59,7 @@ public class AuthController {
                 .setSubject(address)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1 day
-                .signWith(SECRET_KEY)
+                .signWith(jwtSecretKey)
                 .compact();
 
         // Save token in cookie
@@ -82,7 +81,7 @@ public class AuthController {
             newUser.setProfileImageUrl(null);
             newUser.setBannerImageUrl(null);
             newUser.setDiscord("");
-            newUser.setTwitter("");
+            newUser.setTwitter(null);
             newUser.setVerified(false);
             newUser.setBanned(false);
             newUser.setCreatedAt(new Date().toString());
@@ -116,7 +115,7 @@ public ResponseEntity<?> getMe(@RequestHeader(value = "Authorization", required 
 
     try {
         Claims claims = Jwts.parserBuilder()
-            .setSigningKey(SECRET_KEY)
+            .setSigningKey(jwtSecretKey)
             .build()
             .parseClaimsJws(token)
             .getBody();
@@ -134,13 +133,14 @@ public ResponseEntity<?> getMe(@RequestHeader(value = "Authorization", required 
         }
 
         User user = userOpt.get();
-        return ResponseEntity.ok(Map.of(
-            "address", user.getWalletAddress(),
-            "avatarUrl", user.getProfileImageUrl(),
-            "username", user.getUsername(),
-            "bio", user.getBio(),
-            "website", user.getWebsite()
-        ));
+        Map<String, Object> response = new java.util.HashMap<>();
+        response.put("address", user.getWalletAddress());
+        response.put("avatarUrl", user.getProfileImageUrl());
+        response.put("username", user.getUsername());
+        response.put("bio", user.getBio());
+        response.put("website", user.getWebsite());
+        response.put("twitter", user.getTwitter() != null ? user.getTwitter().getUsername() : null);
+        return ResponseEntity.ok(response);
 
     } catch (Exception e) {
         e.printStackTrace();
@@ -160,5 +160,20 @@ public ResponseEntity<?> getMe(@RequestHeader(value = "Authorization", required 
         cookie.setMaxAge(0);
         response.addCookie(cookie);
         return ResponseEntity.ok(Map.of("message", "Logged out"));
+    }
+
+    @PostMapping("/x/disconnect")
+    public ResponseEntity<?> disconnectX(@RequestParam String walletAddress) {
+        Optional<User> userOpt = userRepository.findByWalletAddress(walletAddress.toLowerCase());
+
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(404).body(Map.of("error", "User not found"));
+        }
+
+        User user = userOpt.get();
+        user.setTwitter(null);
+        userRepository.save(user);
+
+        return ResponseEntity.ok(Map.of("message", "X account disconnected"));
     }
 }

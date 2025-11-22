@@ -1,7 +1,25 @@
-import OptionSideSetting from "../../ProfileLayout/ProfileSettingUICPN/OptionSideSetting/OptionSideSetting";
+import React, { useState } from 'react';
+
 import ButtonUploadImg from "./ButtonUploadImg";
 
-const MainCreateCollec = () => {
+const MainCreateCollec = ({ onFileSelect, onDataChange, initialData }: {
+  onFileSelect: (file: File | null) => void;
+  onDataChange: (data: any) => void;
+  initialData: {
+    name: string;
+    description: string;
+    chain: string;
+    type: string;
+    ownerWallet: string;
+  };
+}) => {
+  const [collectionData, setCollectionData] = useState(initialData);
+
+  const handleInputChange = (field: string, value: string) => {
+    const newData = { ...collectionData, [field]: value };
+    setCollectionData(newData);
+    onDataChange(newData);
+  };
   return (
     <>
       <div className="flex h-[85vh]">
@@ -17,7 +35,7 @@ const MainCreateCollec = () => {
             />
           </div>
        <div>
-        <ButtonUploadImg></ButtonUploadImg>
+        <ButtonUploadImg onFileSelect={onFileSelect}></ButtonUploadImg>
        </div>
 
           <span className="text-white font-bold text-[17px] mt-3">
@@ -25,13 +43,18 @@ const MainCreateCollec = () => {
           </span>
 
           <div className="flex gap-2">
-            <div className="bg-[#151517]/5  border-1 border-[#2a2b28] flex  items-center gap-1 px-1 rounded-[7px]">
-              <img src="/eth-icon.svg" alt="" className="w-3 h-3" />
-              <span className="text-white text-[12px]">ETHEREUM</span>
-            </div>
-            <div className="bg-[#151517]/5  border-1 border-[#2a2b28]   items-center  px-1 rounded-[7px]">
+            <button
+              className={`border-1 px-1 rounded-[7px] flex items-center gap-1 ${collectionData.type === 'ERC721' ? 'bg-[#696FC7] border-[#696FC7]' : 'bg-[#151517]/5 border-[#2a2b28]'}`}
+              onClick={() => handleInputChange('type', 'ERC721')}
+            >
+              <span className="text-white text-[12px]">ERC721</span>
+            </button>
+            <button
+              className={`border-1 px-1 rounded-[7px] flex items-center gap-1 ${collectionData.type === 'ERC1155' ? 'bg-[#696FC7] border-[#696FC7]' : 'bg-[#151517]/5 border-[#2a2b28]'}`}
+              onClick={() => handleInputChange('type', 'ERC1155')}
+            >
               <span className="text-white text-[12px]">ERC1155</span>
-            </div>
+            </button>
           </div>
         </div>
         <div className="text-white flex flex-col items-start justify-center  px-10 w-300 space-y-2 border-r-1 border-[#181C14] ">
@@ -45,22 +68,29 @@ const MainCreateCollec = () => {
         <div className="flex flex-col space-y-6 w-170 mb-5">
             <div className="flex flex-col space-y-2">
             <span className="font-bold text-[14px]">Name</span>
-            <input type="text" name="" id="" placeholder="Add Contract Name" className="bg-[#141415] p-3 rounded-[8px] border-[#181C14] border-1"/>
+            <input
+              type="text"
+              name=""
+              id=""
+              placeholder="Add Contract Name"
+              className="bg-[#141415] p-3 rounded-[8px] border-[#181C14] border-1"
+              value={collectionData.name}
+              onChange={(e) => handleInputChange('name', e.target.value)}
+            />
             <span className="text-gray-400 text-[13px]">
               Your contract name is the same as your collection name. You won't
               be able to update later.
             </span>
           </div>
           <div className="flex flex-col space-y-2">
-            <span className="font-bold text-[14px]">Tokem Symbol</span>
-            <input
-              type="text"
-              name=""
-              id=""
-              placeholder="Add Collection Name"
-              className="bg-[#141415] p-3 rounded-[8px] border-[#181C14] border-1 w-65"
+            <span className="font-bold text-[14px]">Description</span>
+            <textarea
+              placeholder="Add Collection Description"
+              className="bg-[#141415] p-3 rounded-[8px] border-[#181C14] border-1"
+              value={collectionData.description}
+              onChange={(e) => handleInputChange('description', e.target.value)}
             />
-            <span className="text-gray-400 text-[13px]">Can't be changed after your contract is deployed.</span>
+            <span className="text-gray-400 text-[13px]">Optional description for your collection.</span>
           </div>
         </div>
           <div className="space-y-2 flex flex-col">
@@ -74,7 +104,7 @@ const MainCreateCollec = () => {
               
                 <span>Ethereum</span>
               </div>{" "}
-              <img src="/public/createdui/arrow-down.svg" alt=""className="w-3 h-3" />
+              <img src="/createdui/arrow-down.svg" alt=""className="w-3 h-3" />
             </button>
             <span className="text-gray-400 text-[13px]">This is the blockchain your collection will live on.<br></br> You won't be able to switch it later.</span>
           </div>
