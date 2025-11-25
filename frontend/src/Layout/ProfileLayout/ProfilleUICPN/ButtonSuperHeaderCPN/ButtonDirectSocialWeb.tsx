@@ -2,11 +2,12 @@ import { useAuth } from "../../../../../Auth/AuthContext";
 
 
 const ButtonDirectSocialWeb = () => {
-  const { website } = useAuth();
+  const { website, twitter } = useAuth();
+  const hrefLink = twitter ? `https://twitter.com/${twitter}` : (website || "#");
   return (
     <>
       <div>
-        <a href={website || "#"} target="_blank" rel="noopener noreferrer">
+        <a href={hrefLink} target="_blank" rel="noopener noreferrer">
           <button className="cursor-pointer hover:scale-120 transition">
             <img
               src="/public/settingprofile/moon.svg"
