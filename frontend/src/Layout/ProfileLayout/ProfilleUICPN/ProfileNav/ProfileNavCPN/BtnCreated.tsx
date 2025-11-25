@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams, useLocation } from "react-router-dom"
+import { Link, useNavigate, useParams, useLocation } from "react-router-dom";
 import { useAuth } from "../../../../../../Auth/AuthContext";
 
-
 const BtnCreated = () => {
-    const { walletaddress } = useParams();
+  const { walletaddress } = useParams();
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const { address, isLoggedIn } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const section = 'created';
+  const section = "created";
   const isActive = location.pathname === `/${walletaddress}/${section}`;
 
   useEffect(() => {
@@ -23,31 +23,43 @@ const BtnCreated = () => {
     // Fetch profile data
     if (walletaddress) {
       fetch(`http://localhost:8081/api/user/${walletaddress}`, {
-        credentials: 'include'
+        credentials: "include",
       })
-        .then(res => res.json())
-        .then(data => {
-          console.log('Profile data:', data);
-          setLoading(false);
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error(`Request failed with status code ${res.status}`);
+          }
+          return res.json();
         })
-        .catch(err => {
-          console.error('Profile fetch error:', err);
+        .then((data) => {
+          console.log("Profile data:", data);
+          setLoading(false);
+          setError(null);
+        })
+        .catch((err) => {
+          console.error("Profile fetch error:", err);
+          setError(err.message);
           setLoading(false);
         });
     }
   }, [walletaddress, address, isLoggedIn, navigate]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
+  // Don't show loading/error in the button itself
   return (
-    <div className="">
+    <div>
       <Link to={`/${walletaddress}/created`}>
-        <button className={`${isActive ? 'text-white border-b-2 border-white font-bold pb-1' : 'text-[#acadae] hover:text-white'} text-[14px] cursor-pointer`}>Created</button>
+        <button
+          className={`${
+            isActive
+              ? "text-white border-b-2 border-white font-bold pb-1"
+              : "text-[#acadae] hover:text-white"
+          } text-[14px] cursor-pointer`}
+        >
+          Created
+        </button>
       </Link>
     </div>
-  )
-}
+  );
+};
 
-export default BtnCreated
+export default BtnCreated;

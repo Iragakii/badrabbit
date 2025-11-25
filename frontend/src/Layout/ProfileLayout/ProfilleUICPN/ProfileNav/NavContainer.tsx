@@ -1,5 +1,6 @@
 
 import BtnCreated from "./ProfileNavCPN/BtnCreated"
+import BtnCreating from "./ProfileNavCPN/BtnCreating"
 import BtnFavorite from "./ProfileNavCPN/BtnFavorite"
 import BtnGallery from "./ProfileNavCPN/BtnGallery"
 import BtnListings from "./ProfileNavCPN/BtnListings"
@@ -21,6 +22,7 @@ const NavContainer = () => {
             <BtnListings></BtnListings>
             <BtnOffers></BtnOffers>
             <BtnPorfolio></BtnPorfolio>
+            <BtnCreating></BtnCreating>
             <BtnCreated></BtnCreated>
             <BtnWatchList></BtnWatchList>
             <BtnFavorite></BtnFavorite>

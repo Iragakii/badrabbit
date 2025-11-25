@@ -2,6 +2,11 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import BTNCreatedCollectNavBar from "./BTNCreatedCollectNavBar";
 import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
+import BTNCreatedCollectNavBarDate from "./BTNCreatedCollectNavBar";
+import CreatedCollectHeaderFilter from "./CreatedCollectHeaderFilter";
+import CreatedCollectHeaderFilterDate from "./CreatedCollectionFilterDate";
+
+
 
 interface Collection {
   _id: string;
@@ -78,19 +83,19 @@ const CreatedCollectRightUI = () => {
 
   return (
     <>
-      <div className="p-6 flex flex-col gap-6 container mx-auto">
-        <div className="flex justify-between bg-amber-400 p-2 container mx-auto">
-          <BTNCreatedCollectNavBar />
-          <BTNCreatedCollectNavBar />
-        </div>
+      <div className="flex flex-col container mx-auto">
+        <div className="flex flex-col gap-3">
+          <CreatedCollectHeaderFilterDate></CreatedCollectHeaderFilterDate>
+        <CreatedCollectHeaderFilter></CreatedCollectHeaderFilter>
 
+        </div>
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="collections-list">
             {(provided) => (
               <div
                 {...provided.droppableProps}
                 ref={provided.innerRef}
-                className="flex flex-col gap-4"
+                className="flex flex-col divide-y-[0.2px] divide-gray-800"
               >
                 {collections.length === 0 && !loading && (
                   <div className="text-white text-center py-10">No collections found.</div>
@@ -107,11 +112,12 @@ const CreatedCollectRightUI = () => {
                       index={index}
                     >
                       {(provided, snapshot) => (
-                        <div
+                      <div className="">
+                          <div
                           ref={provided.innerRef}
                           {...provided.draggableProps}
-                          className={`flex gap-4 items-center p-2 rounded-md transition-colors ${
-                            snapshot.isDragging ? "bg-[#3DB6B1] shadow-lg scale-105" : "bg-transparent"
+                          className={`flex gap-3 items-center  transition-colors ${
+                            snapshot.isDragging ? "bg-[#3DB6B1] rounded-md shadow-lg scale-105" : "bg-transparent pt-2 pb-1"
                           }`}
                         >
                           {/* Drag Handle - ONLY this icon triggers drag */}
@@ -132,7 +138,7 @@ const CreatedCollectRightUI = () => {
                           </div>
 
                           {/* Collection Content */}
-                          <div className="flex gap-3 items-center">
+                          <div className="flex gap-5 items-center">
                             <div className="relative group transition duration-300">
                               <img
                                 src={convertIpfsToHttp(col.image)}
@@ -140,18 +146,20 @@ const CreatedCollectRightUI = () => {
                                 className="w-20 h-20 object-cover rounded-lg cursor-pointer hover:scale-105 transition-transform"
                               />
                               {col.chain === "Ethereum" && (
-                                <div className="p-1 rounded-[8px] bg-[#696FC7] w-6 h-6 bottom-[-10px] right-[-10px] absolute group-hover:scale-105 group-hover:translate-x-2.5 group-hover:rotate-6 transition duration-300 cursor-pointer">
+                                <div className="p-1 rounded-[8px] bg-[#696FC7] w-6 h-6 top-[-8px] right-[-10px] absolute group-hover:scale-105 group-hover:translate-x-2.5 group-hover:rotate-6 transition duration-300 cursor-pointer">
                                   <img src="/eth-icon.svg" alt="" className="w-4 h-4" />
                                 </div>
                               )}
-                              <div>
+                         
+                            </div>
+                                 <div>
                                 <h3 className="text-white font-semibold text-xs text-center">
                                   {col.name}
                                 </h3>
                               </div>
-                            </div>
                           </div>
                         </div>
+                      </div>
                       )}
                     </Draggable>
                   );

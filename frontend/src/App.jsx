@@ -19,6 +19,10 @@ function AppRoutes() {
       <Route path='/settings/profile' element={<ProfileSettingUI />} />
       <Route path='/oauth/x/callback' element={<XConnectCallbackUI />} />
       <Route
+        path="/:walletaddress/creating"
+        element={<ProfileUI />}
+      />
+      <Route
         path="/:walletaddress/created"
         element={<ProfileUI />}
       />

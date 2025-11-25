@@ -6,7 +6,7 @@ const CreatedCollectionUI = () => {
   return (
     <>
      <div className=''>
-         <CreatedCollectHeaderFilter></CreatedCollectHeaderFilter>
+         
         <CreatedCollectRightUI></CreatedCollectRightUI>
      </div>
     </>
