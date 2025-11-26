@@ -14,20 +14,20 @@ const SuperHeader = () => {
   const isItems = location.pathname.endsWith('/items');
   return (
     <>
-      <div className="space-y-6 fixed top-0 left-0 right-0 bg-[#0C0C0C] text-white z-20">
+      <div className="space-y-6 bg-[#0C0C0C] text-white">
         <Header />
 
         <div className="space-y-4">
           <SecSuperHeader />
           <NavContainer />
         </div>
-         {isItems && (
-          <div className="">
+        {isItems && (
+          <div>
             <ProfileItemsUI />
           </div>
         )}
         {showProfileUI && (
-          <div className="">
+          <div>
             <ProfileCreatedUI />
           </div>
         )}

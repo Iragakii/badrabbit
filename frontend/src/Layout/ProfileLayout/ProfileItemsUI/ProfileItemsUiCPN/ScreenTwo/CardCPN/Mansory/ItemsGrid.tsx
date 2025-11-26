@@ -55,7 +55,7 @@ const ItemsGrid = ({ walletaddress }: ItemsGridProps) => {
     600: 2,
     400: 1,
   };
-  const heightClasses = ["h-51", "h-67", "h-58", "h-62", "h-60"];
+  const heightClasses = ["h-51", "h-65", "h-58", "h-62", "h-60"];
 
   return (
     <div className="w-full px-10 flex justify-center">

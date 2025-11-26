@@ -14,15 +14,15 @@ const ProfileItemsUI = () => {
     return null;
   }
   return (
-    <>
+    <div className="overflow-y-auto">
       <div className="flex flex-col gap-3 ">
         <ProfileFirstFilerItem />
         <ProfileSecFilterItem />
       </div>
-      <div className="mt-6 ">
+      <div className="mt-6">
         <ItemsGrid walletaddress={walletaddress as string} />
       </div>
-    </>
+    </div>
   );
 };
 

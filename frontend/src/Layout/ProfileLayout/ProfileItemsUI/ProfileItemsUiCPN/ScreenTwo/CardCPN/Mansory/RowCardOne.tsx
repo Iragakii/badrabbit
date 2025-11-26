@@ -59,7 +59,7 @@ const RowCardOne: React.FC<MediaCardProps> = ({
             Listed
           </div>
           {/* Make Offer button (hidden by default) */}
-          <button className="absolute inset-0 flex items-center justify-center bg-green-500 text-white text-xs font-semibold rounded transform translate-y-full opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+          <button className="absolute inset-0 flex items-center justify-center bg-green-500 text-white text-xs font-semibold rounded transform translate-y-full opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 cursor-pointer">
             Make Offer
           </button>
         </div>

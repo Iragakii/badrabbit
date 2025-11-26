@@ -64,17 +64,14 @@ const ProfileUI = () => {
   }
 
   return (
-    <div className="min-h-screen">
-      <div className="flex">
-        <NavBar />
-        <div>
-          <SuperHeader />
-        </div>
-        <Footer />
+    <div className="min-h-screen flex bg-[#0C0C0C]">
+      <NavBar />
+      <div className="flex-1 flex flex-col">
+        <SuperHeader />
       </div>
+      <Footer />
     </div>
   );
 };
 
 export default ProfileUI;
-
