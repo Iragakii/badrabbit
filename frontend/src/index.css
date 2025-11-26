@@ -7,3 +7,36 @@ body {
   background-color: #0C0C0C;
   
 }
+.my-masonry-grid {
+  display: flex;
+  margin-left: -15px; 
+  width: auto;
+}
+
+.my-masonry-grid_column {
+  padding-left: 15px;
+  background-clip: padding-box;
+}
+
+.my-masonry-grid_column > div {
+  margin-bottom: 15px;
+}
+/* Enable perspective container */
+.perspective {
+  perspective: 600px;
+}
+
+/* Preserve 3D for inner flip */
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+
+/* Rotate Y */
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+/* Hide backface so back side is visible only when flipped */
+.backface-hidden {
+  backface-visibility: hidden;
+}

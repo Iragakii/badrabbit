@@ -31,7 +31,7 @@ function AppRoutes() {
         element={<ProfileUI />}
       />
       <Route
-        path="/:walletaddress/nfts"
+        path="/:walletaddress/items"
         element={<ProfileUI />}
       />
       <Route

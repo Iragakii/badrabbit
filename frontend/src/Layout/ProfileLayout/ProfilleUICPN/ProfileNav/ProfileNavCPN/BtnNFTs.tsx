@@ -5,13 +5,13 @@ const BtnNFTs = () => {
   const { walletaddress } = useParams();
   const location = useLocation();
 
-  const section = 'nfts';
+  const section = 'items';
   const isActive = location.pathname === `/${walletaddress}/${section}`;
 
   return (
     <div className="">
-      <Link to={`/${walletaddress}/nfts`}>
-        <button className={`${isActive ? 'text-white border-b-2 border-white font-bold pb-1' : 'text-[#acadae] hover:text-white'} text-[14px] cursor-pointer font-extralight`}>NFTs</button>
+      <Link to={`/${walletaddress}/items`}>
+        <button className={`${isActive ? 'text-white border-b-2 border-white font-bold pb-1' : 'text-[#acadae] hover:text-white'} text-[14px] cursor-pointer font-extralight`}>Items</button>
       </Link>
     </div>
   )
