@@ -1,17 +1,50 @@
+import { useEffect, useState } from "react";
 
 import Masonry from "react-masonry-css";
 import RowCardOne from "./RowCardOne";
+import { useAuth } from "../../../../../../../../Auth/AuthContext";
 
-// TEMP sample items — replace with real collection/NFT items later
-const sampleItems = [
-  { id: 1, imageUrl: "/itemstemp/items-1.jpg", chainIcon: "/itemstemp/chain-i.svg" },
-  { id: 2, imageUrl: "/itemstemp/items-2.jpg", chainIcon: "/itemstemp/chain-i.svg" },
-  { id: 3, imageUrl: "/itemstemp/items-3.jpg", chainIcon: "/itemstemp/chain-i.svg" },
-  { id: 4, imageUrl: "/itemstemp/items-4.jpg", chainIcon: "/itemstemp/chain-i.svg" },
-  { id: 5, imageUrl: "/itemstemp/items-5.jpg", chainIcon: "/itemstemp/chain-i.svg" },
-];
+type ItemType = {
+  id: string | number;
+  imageUrl: string;
+  chainIcon: string;
+  chainName?: string;
+};
 
-const ItemsGrid = () => {
+interface ItemsGridProps {
+  walletaddress: string;
+}
+
+const ItemsGrid = ({ walletaddress }: ItemsGridProps) => {
+  const { address, isLoggedIn } = useAuth();
+  const [items, setItems] = useState<ItemType[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    if (!isLoggedIn || !address || address.toLowerCase() !== walletaddress?.toLowerCase()) {
+      setItems([]);
+      setLoading(false);
+      return;
+    }
+    fetch(`/api/items/owner/${walletaddress}`)
+      .then(res => res.ok ? res.json() : [])
+      .then((data: ItemType[]) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setItems(data);
+        } else {
+          setItems([]);
+        }
+        setLoading(false);
+      }).catch(() => {
+        setItems([]);
+        setLoading(false);
+      });
+  }, [isLoggedIn, address, walletaddress]);
+
+  if (loading) return <div>Loading...</div>;
+  if (!isLoggedIn || !address || address.toLowerCase() !== walletaddress?.toLowerCase()) return null;
+
   const breakpointColumnsObj = {
     default: 5,
     1600: 5,
@@ -22,7 +55,6 @@ const ItemsGrid = () => {
     600: 2,
     400: 1,
   };
-
   const heightClasses = ["h-51", "h-67", "h-58", "h-62", "h-60"];
 
   return (
@@ -32,22 +64,16 @@ const ItemsGrid = () => {
         className="my-masonry-grid"
         columnClassName="my-masonry-grid_column"
       >
-        {sampleItems.map((item, index) => {
+        {items.map((item, index) => {
           const heightClass = heightClasses[index % heightClasses.length];
-
           return (
             <div key={item.id}>
               <RowCardOne
                 imageUrl={item.imageUrl}
                 heightClass={heightClass}
                 maxWidthClass="max-w-[300px]"
-                chainIcon={
-                  <img
-                    src={item.chainIcon}
-                    alt="chain icon"
-                    className="w-4 h-4"
-                  />
-                }
+                chainIcon={<img src={item.chainIcon} alt="chain icon" className="w-4 h-4" />}
+                chainName={item.chainName || "ETH"}
               />
             </div>
           );

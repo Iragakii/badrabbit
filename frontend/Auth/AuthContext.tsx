@@ -20,7 +20,7 @@ interface AuthContextType {
   logout: () => Promise<void>;
   token: string | null;
   address: string | null;
-  fetchAddress: () => Promise<void>;
+  fetchAddress: (overrideToken?: string) => Promise<void>;
   avatarUrl: string | null;
   updateAvatar: (url: string) => void;
   username: string | null;
@@ -129,7 +129,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         document.cookie = `access_token=${newToken};path=/;max-age=86400`;
       }
 
-      await fetchAddress();
+      await fetchAddress(newToken);
     } catch (error) {
       console.error('Login error:', error);
       setError('Failed to complete login');
@@ -138,8 +138,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const fetchAddress = async () => {
-    if (!token) return;
+  const fetchAddress = async (overrideToken?: string) => {
+    const authToken = overrideToken ?? token;
+    if (!authToken) return;
 
     setIsLoading(true);
     clearError();
@@ -147,7 +148,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       const res = await axios.get('/api/auth/me', {
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${authToken}`
         }
       });
 
@@ -217,9 +218,11 @@ useEffect(() => {
 
         localStorage.setItem('wallet_address', walletAddress);
       } catch (error) {
-        console.error('Auth initialization error:', error);
-        if (axios.isAxiosError(error) && error.response?.status === 401) {
-          // Token invalid or missing, stay logged out
+        const isAxiosError = axios.isAxiosError(error);
+        const status = isAxiosError ? error.response?.status : undefined;
+
+        if (status === 401) {
+          // Expected when not logged in: quietly reset auth state without noisy logs
           setIsLoggedIn(false);
           setAddress(null);
           setAvatarUrl(null);
@@ -228,6 +231,8 @@ useEffect(() => {
           setWebsite('');
           setTwitter(null);
           localStorage.removeItem('wallet_address');
+        } else {
+          console.error('Auth initialization error:', error);
         }
       }
 

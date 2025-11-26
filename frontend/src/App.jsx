@@ -12,6 +12,7 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path='/' element={<HomePage />} />
+      <Route path='/profile' element={<ProfileUI />} />
       <Route
         path="/:walletaddress"
         element={<ProfileUI />}

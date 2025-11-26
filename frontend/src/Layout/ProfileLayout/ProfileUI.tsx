@@ -1,68 +1,80 @@
-import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-
+import { useEffect, useMemo } from 'react';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import SuperHeader from './ProfilleUICPN/SuperHeader';
 import { useAuth } from '../../../Auth/AuthContext';
 import NavBar from '../../components/NavBar/NavBar';
 import Footer from '../../components/Footer/Footer';
-
-
+import ProfilePlaceholder from './ProfilePlaceholder';
 
 const ProfileUI = () => {
-  const { walletaddress } = useParams();
-  const [loading, setLoading] = useState(true);
-  const { address, isLoggedIn } = useAuth();
+  const { walletaddress } = useParams<{ walletaddress?: string }>();
+  const location = useLocation();
   const navigate = useNavigate();
+  const { address, isLoggedIn, isLoading } = useAuth();
+
+  const normalizedUrlWallet = walletaddress?.toLowerCase();
+  const normalizedUserWallet = address?.toLowerCase();
+
+  const trailingSuffix = useMemo(() => {
+    const segments = location.pathname.split('/').filter(Boolean);
+    if (segments.length <= 1) return '';
+    const rest = segments.slice(1).join('/');
+    return rest ? `/${rest}` : '';
+  }, [location.pathname]);
 
   useEffect(() => {
-    // Redirect to wallet address if logged in but no wallet address in URL
-    if (isLoggedIn && address && !walletaddress) {
-      navigate(`/profile/${address}`);
-      return;
-    }
+    if (isLoading || !isLoggedIn || !address) return;
 
-    // Fetch profile data
-    if (walletaddress) {
-      fetch(`http://localhost:8081/api/user/${walletaddress}`, {
-        credentials: 'include'
-      })
-        .then(res => res.json())
-        .then(data => {
-          console.log('Profile data:', data);
-          setLoading(false);
-        })
-        .catch(err => {
-          console.error('Profile fetch error:', err);
-          setLoading(false);
-        });
+    if (!normalizedUrlWallet || normalizedUrlWallet !== normalizedUserWallet) {
+      navigate(`/${address}${trailingSuffix}`, { replace: true });
     }
-  }, [walletaddress, address, isLoggedIn, navigate]);
+  }, [
+    isLoading,
+    isLoggedIn,
+    address,
+    normalizedUrlWallet,
+    normalizedUserWallet,
+    navigate,
+    trailingSuffix,
+  ]);
 
-  if (loading) {
-    return <div>Loading...</div>; 
+  useEffect(() => {
+    if (isLoading) return;
+
+    if (!isLoggedIn && walletaddress) {
+      navigate('/profile', { replace: true });
+    }
+  }, [isLoading, isLoggedIn, walletaddress, navigate]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!walletaddress) {
+    if (isLoggedIn && address) {
+      return <div>Loading...</div>;
+    }
+    return <ProfilePlaceholder />;
+  }
+
+  const isOwnProfile = isLoggedIn && normalizedUserWallet === normalizedUrlWallet;
+
+  if (!isOwnProfile) {
+    return <ProfilePlaceholder />;
   }
 
   return (
-    <>
-      <div className="min-h-screen">
-        <div className="flex">
-          <div>
-            <NavBar />
-          </div>
-          <div className="">
-            
-              <SuperHeader />
-             
-       
-
-          
-          
-          </div>
-            <Footer />
+    <div className="min-h-screen">
+      <div className="flex">
+        <NavBar />
+        <div>
+          <SuperHeader />
         </div>
+        <Footer />
       </div>
-    </>
+    </div>
   );
 };
 
 export default ProfileUI;
+
