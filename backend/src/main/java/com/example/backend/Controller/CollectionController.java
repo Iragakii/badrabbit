@@ -55,4 +55,11 @@ public class CollectionController {
         List<CollectionModel> collections = collectionRepository.findByOwnerWallet(walletAddress.toLowerCase());
         return ResponseEntity.ok(collections);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getCollectionById(@PathVariable String id) {
+        return collectionRepository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 }
