@@ -75,7 +75,9 @@ const ItemsGrid = ({ walletaddress }: ItemsGridProps) => {
                 chainIcon={<img src={item.chainIcon} alt="chain icon" className="w-4 h-4" />}
                 chainName={item.chainName || "ETH"}
               />
+               <div className="mt-7"></div>
             </div>
+           
           );
         })}
       </Masonry>
