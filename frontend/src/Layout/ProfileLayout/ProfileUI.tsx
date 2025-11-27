@@ -64,12 +64,17 @@ const ProfileUI = () => {
   }
 
   return (
-    <div className="min-h-screen flex bg-[#0C0C0C]">
+    <div className="min-h-screen flex">
       <NavBar />
       <div className="flex-1 flex flex-col">
-        <SuperHeader />
+        <div className="flex-shrink-0">
+          <SuperHeader />
+        </div>
+        <div className="flex-1 overflow-y-auto">
+          {/* Scrollable content area */}
+        </div>
+        <Footer />
       </div>
-      <Footer />
     </div>
   );
 };

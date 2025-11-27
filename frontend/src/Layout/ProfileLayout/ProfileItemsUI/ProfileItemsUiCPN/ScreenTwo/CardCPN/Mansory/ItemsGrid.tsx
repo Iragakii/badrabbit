@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-
+import { useSearchParams } from "react-router-dom";
 import Masonry from "react-masonry-css";
 import RowCardOne from "./RowCardOne";
 import { useAuth } from "../../../../../../../../Auth/AuthContext";
@@ -9,6 +9,7 @@ type ItemType = {
   imageUrl: string;
   chainIcon: string;
   chainName?: string;
+  collectionName?: string;
 };
 
 interface ItemsGridProps {
@@ -17,30 +18,54 @@ interface ItemsGridProps {
 
 const ItemsGrid = ({ walletaddress }: ItemsGridProps) => {
   const { address, isLoggedIn } = useAuth();
+  const [searchParams] = useSearchParams();
   const [items, setItems] = useState<ItemType[]>([]);
+  const [allItems, setAllItems] = useState<ItemType[]>([]);
   const [loading, setLoading] = useState(true);
+  const collectionId = searchParams.get("collection");
 
   useEffect(() => {
     setLoading(true);
     if (!isLoggedIn || !address || address.toLowerCase() !== walletaddress?.toLowerCase()) {
       setItems([]);
+      setAllItems([]);
       setLoading(false);
       return;
     }
-    fetch(`/api/items/owner/${walletaddress}`)
+    fetch(`http://localhost:8081/api/items/owner/${walletaddress}`)
       .then(res => res.ok ? res.json() : [])
       .then((data: ItemType[]) => {
-        if (Array.isArray(data) && data.length > 0) {
-          setItems(data);
+        if (Array.isArray(data)) {
+          setAllItems(data);
         } else {
-          setItems([]);
+          setAllItems([]);
         }
         setLoading(false);
       }).catch(() => {
-        setItems([]);
+        setAllItems([]);
         setLoading(false);
       });
   }, [isLoggedIn, address, walletaddress]);
+
+  // Filter by collection if collectionId is provided
+  useEffect(() => {
+    if (collectionId && allItems.length > 0) {
+      // Fetch collection name from collectionId, then filter items
+      fetch(`http://localhost:8081/api/collections/${collectionId}`)
+        .then(res => res.ok ? res.json() : null)
+        .then((collection: { name: string } | null) => {
+          if (collection) {
+            const filtered = allItems.filter(item => item.collectionName === collection.name);
+            setItems(filtered);
+          } else {
+            setItems([]);
+          }
+        })
+        .catch(() => setItems([]));
+    } else {
+      setItems(allItems);
+    }
+  }, [collectionId, allItems]);
 
   if (loading) return <div>Loading...</div>;
   if (!isLoggedIn || !address || address.toLowerCase() !== walletaddress?.toLowerCase()) return null;

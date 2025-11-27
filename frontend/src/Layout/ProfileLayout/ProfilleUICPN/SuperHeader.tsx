@@ -21,17 +21,18 @@ const SuperHeader = () => {
           <SecSuperHeader />
           <NavContainer />
         </div>
-        {isItems && (
-          <div>
-            <ProfileItemsUI />
-          </div>
-        )}
-        {showProfileUI && (
-          <div>
-            <ProfileCreatedUI />
-          </div>
-        )}
       </div>
+      {/* Content components rendered outside fixed header for scrolling */}
+      {isItems && (
+        <div className="bg-[#0C0C0C]">
+          <ProfileItemsUI />
+        </div>
+      )}
+      {showProfileUI && (
+        <div className="bg-[#0C0C0C]">
+          <ProfileCreatedUI />
+        </div>
+      )}
     </>
   );
 };
