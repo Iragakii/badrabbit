@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useAuth } from "../../../Auth/AuthContext";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import ButtonUploadImg from "./ModalCreateNFTCPN/ButtonUploadImg";
 
 interface ModalCreateNFTProps {
   onClose: () => void;
   selectedCollection?: {
-    _id: string;
+    _id?: string;
+    id?: string;
     name: string;
     image: string;
     chain: string;
@@ -16,7 +17,8 @@ interface ModalCreateNFTProps {
 }
 
 interface Collection {
-  _id: string;
+  _id?: string;
+  id?: string;
   name: string;
   image: string;
   chain: string;
@@ -26,17 +28,18 @@ interface Collection {
 const ModalCreateNFT = ({ onClose, selectedCollection }: ModalCreateNFTProps) => {
   const { address } = useAuth();
   const { walletaddress } = useParams();
+  const navigate = useNavigate();
   const [collections, setCollections] = useState<Collection[]>([]);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
-    collectionId: selectedCollection?._id || "",
+    collectionId: (selectedCollection?._id || selectedCollection?.id) || "",
     collectionName: selectedCollection?.name || "",
     supply: "",
     description: "",
-    chainName: selectedCollection?.chain || "ETH",
-    chainIcon: "/itemstemp/chain-i.svg",
+    chainName: selectedCollection?.chain === "Ethereum" ? "ETH" : (selectedCollection?.chain || "ETH"),
+    chainIcon: selectedCollection?.chain === "Ethereum" ? "/eth-icon.svg" : "/itemstemp/chain-i.svg",
   });
 
   useEffect(() => {
@@ -54,13 +57,19 @@ const ModalCreateNFT = ({ onClose, selectedCollection }: ModalCreateNFTProps) =>
     fetch(`http://localhost:8081/api/collections/owner/${walletaddress}`)
       .then((res) => res.json())
       .then((data) => {
+        console.log("Fetched collections for NFT creation:", data);
         setCollections(data);
         if (selectedCollection && !formData.collectionId) {
+          // Get the collection ID (handle both id and _id)
+          const collectionId = selectedCollection._id || selectedCollection.id || "";
+          const chainIcon = selectedCollection.chain === "Ethereum" ? "/eth-icon.svg" : "/itemstemp/chain-i.svg";
+          console.log("Setting initial collection:", selectedCollection.name, "ID:", collectionId);
           setFormData((prev) => ({
             ...prev,
-            collectionId: selectedCollection._id,
+            collectionId: collectionId,
             collectionName: selectedCollection.name,
-            chainName: selectedCollection.chain,
+            chainName: selectedCollection.chain === "Ethereum" ? "ETH" : selectedCollection.chain,
+            chainIcon: chainIcon,
           }));
         }
       })
@@ -70,13 +79,23 @@ const ModalCreateNFT = ({ onClose, selectedCollection }: ModalCreateNFTProps) =>
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     if (field === "collectionId") {
-      const collection = collections.find((c) => c._id === value);
+      // Find collection by either id or _id
+      const collection = collections.find((c) => {
+        const cId = c.id || c._id || "";
+        return cId === value;
+      });
       if (collection) {
+        console.log("Collection selected:", collection.name, "ID:", collection.id || collection._id);
+        // Set chain icon based on collection chain
+        const chainIcon = collection.chain === "Ethereum" ? "/eth-icon.svg" : "/itemstemp/chain-i.svg";
         setFormData((prev) => ({
           ...prev,
           collectionName: collection.name,
-          chainName: collection.chain,
+          chainName: collection.chain === "Ethereum" ? "ETH" : collection.chain,
+          chainIcon: chainIcon,
         }));
+      } else {
+        console.error("Collection not found for ID:", value, "Available collections:", collections.map(c => ({ id: c.id || c._id, name: c.name })));
       }
     }
   };
@@ -118,6 +137,21 @@ const ModalCreateNFT = ({ onClose, selectedCollection }: ModalCreateNFTProps) =>
       // Upload image to IPFS
       const ipfsUrl = await uploadToIPFS(selectedFile);
 
+      // Verify collection name is set correctly before submitting
+      const selectedCollectionData = collections.find((c) => {
+        const cId = c.id || c._id || "";
+        return cId === formData.collectionId;
+      });
+      
+      const finalCollectionName = selectedCollectionData?.name || formData.collectionName;
+      
+      console.log("Creating NFT with:", {
+        name: formData.name,
+        collectionId: formData.collectionId,
+        collectionName: finalCollectionName,
+        selectedCollection: selectedCollectionData
+      });
+
       // Create NFT item
       const response = await fetch("http://localhost:8081/api/items", {
         method: "POST",
@@ -125,7 +159,7 @@ const ModalCreateNFT = ({ onClose, selectedCollection }: ModalCreateNFTProps) =>
         body: JSON.stringify({
           ownerWallet: address,
           name: formData.name,
-          collectionName: formData.collectionName,
+          collectionName: finalCollectionName,
           imageUrl: ipfsUrl,
           chainName: formData.chainName,
           chainIcon: formData.chainIcon,
@@ -138,8 +172,13 @@ const ModalCreateNFT = ({ onClose, selectedCollection }: ModalCreateNFTProps) =>
       if (response.ok) {
         alert("NFT created successfully!");
         onClose();
-        // Optionally refresh the page or update state
-        window.location.reload();
+        // Navigate to items page with collection filter to show the new NFT
+        if (walletaddress && formData.collectionId) {
+          // Use navigate to prevent scroll to top and page reload
+          navigate(`/${walletaddress}/items?collection=${formData.collectionId}`, { replace: false });
+        } else if (walletaddress) {
+          navigate(`/${walletaddress}/items`, { replace: false });
+        }
       } else {
         const errorText = await response.text();
         console.error("Error response:", errorText);
@@ -155,31 +194,39 @@ const ModalCreateNFT = ({ onClose, selectedCollection }: ModalCreateNFTProps) =>
 
   const modalContent = (
     <>
-      {/* Backdrop */}
+      {/* Full Screen Backdrop with Black Opacity */}
       <div
-        className="fixed inset-0 bg-[#0C0C0C] bg-opacity-95 z-[2000]"
+        className="fixed inset-0 bg-black bg-opacity-80 z-[2100]"
         onClick={onClose}
       >
         <div
-          className="fixed inset-0 z-[2000] flex items-center justify-center p-8"
+          className="fixed inset-0 z-[2100] flex flex-col p-8 overflow-y-auto"
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="bg-[#0C0C0C] border border-[#2C2C2C] rounded-[10px] w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-            {/* Close Button */}
-            <button
-              onClick={onClose}
-              className="absolute top-4 right-4 text-gray-500 hover:text-white text-2xl z-[3000] cursor-pointer"
-            >
-              &times;
-            </button>
+          {/* Close Button */}
+          <button
+            onClick={onClose}
+            className="absolute top-8 right-8 text-white hover:text-gray-300 text-3xl z-[3100] cursor-pointer"
+          >
+            &times;
+          </button>
 
-            {/* Modal Content */}
-            <div className="p-8 space-y-6">
-              <h2 className="text-white font-bold text-[40px] font-sans">
+          {/* Full Screen Modal Content */}
+          <div className="flex-1 flex flex-col items-center justify-center w-full py-8">
+            <div className="w-full max-w-4xl space-y-6">
+              <h2 className="text-white font-bold text-[55px] font-sans text-center">
                 Create NFT
               </h2>
 
-              <div className="space-y-4">
+             <div className="flex gap-20 w-250">
+           
+              <div className="flex flex-col space-y-2 w-full">
+                  <label className="text-white font-semibold text-[14px]">
+                    NFT Image <span className="text-red-500">*</span>
+                  </label>
+                  <ButtonUploadImg onFileSelect={setSelectedFile} />
+                </div>
+                <div className="space-y-4 w-full">
                 {/* NFT Name */}
                 <div className="flex flex-col space-y-2">
                   <label className="text-white font-semibold text-[14px]">
@@ -205,11 +252,14 @@ const ModalCreateNFT = ({ onClose, selectedCollection }: ModalCreateNFTProps) =>
                     onChange={(e) => handleInputChange("collectionId", e.target.value)}
                   >
                     <option value="">Select a collection</option>
-                    {collections.map((col) => (
-                      <option key={col._id} value={col._id}>
-                        {col.name}
-                      </option>
-                    ))}
+                    {collections.map((col) => {
+                      const colId = col.id || col._id || "";
+                      return (
+                        <option key={colId} value={colId}>
+                          {col.name}
+                        </option>
+                      );
+                    })}
                   </select>
                 </div>
 
@@ -236,33 +286,29 @@ const ModalCreateNFT = ({ onClose, selectedCollection }: ModalCreateNFTProps) =>
                   <textarea
                     placeholder="Enter NFT description (optional)"
                     rows={4}
-                    className="bg-[#141415] p-3 rounded-[8px] border border-[#181C14] text-white placeholder-gray-500 resize-none"
+                    className="bg-[#141415] p-4 py-6 rounded-[8px] border border-[#181C14] text-white placeholder-gray-500 resize-none"
                     value={formData.description}
                     onChange={(e) => handleInputChange("description", e.target.value)}
                   />
                 </div>
 
-                {/* Image Upload */}
-                <div className="flex flex-col space-y-2">
-                  <label className="text-white font-semibold text-[14px]">
-                    NFT Image <span className="text-red-500">*</span>
-                  </label>
-                  <ButtonUploadImg onFileSelect={setSelectedFile} />
-                </div>
+            
+              
               </div>
+             </div>
 
               {/* Submit Button */}
-              <div className="flex justify-end gap-4 pt-4">
+              <div className="flex justify-end gap-4 pt-6 w-250">
                 <button
                   onClick={onClose}
-                  className="bg-[#151517]/5 p-3 px-6 text-white font-[500] border border-[#2C2C2C] rounded-[7px] hover:bg-[#0C0C0C]/80 cursor-pointer"
+                  className="bg-[#151517]/5 p-4 px-8 text-white font-[500] border border-[#2C2C2C] rounded-[7px] hover:bg-[#0C0C0C]/80 cursor-pointer text-[16px]"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleSubmit}
                   disabled={loading}
-                  className="bg-[#696FC7] p-3 px-6 text-white font-[500] rounded-[7px] hover:bg-[#5a5fb8] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-[#696FC7] p-4 px-8 text-white font-[500] rounded-[7px] hover:bg-[#5a5fb8] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-[16px]"
                 >
                   {loading ? "Creating..." : "Create NFT"}
                 </button>

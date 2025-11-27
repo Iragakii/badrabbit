@@ -16,10 +16,18 @@ body {
 .my-masonry-grid_column {
   padding-left: 15px;
   background-clip: padding-box;
+  width: 100% !important;
 }
 
 .my-masonry-grid_column > div {
   margin-bottom: 15px;
+  width: 100%;
+}
+
+/* Ensure items don't stretch when there are fewer items than columns */
+.my-masonry-grid_column > div > div {
+  width: 100%;
+  max-width: 100%;
 }
 /* Enable perspective container */
 .perspective {

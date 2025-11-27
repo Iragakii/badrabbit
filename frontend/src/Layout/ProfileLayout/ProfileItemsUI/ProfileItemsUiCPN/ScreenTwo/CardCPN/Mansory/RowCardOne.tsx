@@ -6,6 +6,8 @@ interface MediaCardProps {
   maxWidthClass?: string;
   chainIcon?: React.ReactNode;
   chainName?: string;
+  itemName?: string;
+  collectionName?: string;
 }
 
 const RowCardOne: React.FC<MediaCardProps> = ({
@@ -14,10 +16,12 @@ const RowCardOne: React.FC<MediaCardProps> = ({
   maxWidthClass = "max-w-full",
   chainIcon,
   chainName = "POL",
+  itemName = "Item Name",
+  collectionName = "Collection Name",
 }) => {
   return (
     <div
-      className={`relative rounded-xl overflow-hidden ${maxWidthClass} transform transition-all duration-300 ease-in-out hover:scale-[1.02] group`}
+      className={`relative rounded-xl overflow-hidden ${maxWidthClass} w-full transform transition-all duration-300 ease-in-out hover:scale-[1.02] group`}
     >
       {/* Image */}
       <img
@@ -25,6 +29,11 @@ const RowCardOne: React.FC<MediaCardProps> = ({
         alt="item"
         className={`w-full object-cover ${heightClass} cursor-pointer transition-transform duration-300 hover:scale-105`}
         loading="lazy"
+        onError={(e) => {
+          console.error("Image failed to load:", imageUrl);
+          // Optionally set a placeholder image
+          (e.target as HTMLImageElement).src = "/placeholder-image.png";
+        }}
       />
 
       {/* Top-left chain icon with 3D flip */}
@@ -46,10 +55,10 @@ const RowCardOne: React.FC<MediaCardProps> = ({
       {/* Overlay content */}
       <div className="absolute bottom-0 left-0 w-full p-3 text-white bg-gradient-to-t from-black/70 to-transparent">
         <div className="text-sm font-semibold truncate bg-black/30 py-1 rounded flex items-center m-auto justify-center">
-          Item Name
+          {itemName}
         </div>
         <div className="text-xs text-gray-300 truncate mt-1 bg-black/20 px-1 rounded flex items-center m-auto justify-center">
-          Collection Name
+          {collectionName}
         </div>
 
         {/* Listed + sliding button */}

@@ -31,60 +31,64 @@ const ModalNFTChoice = ({ onClose, selectedCollection, onCreateNFT }: ModalNFTCh
   const handleViewNFTs = () => {
     onClose();
     // Navigate to items page with collection filter
-    if (walletaddress) {
+    if (walletaddress && selectedCollection?._id) {
+      console.log("Navigating with collection ID:", selectedCollection._id);
       navigate(`/${walletaddress}/items?collection=${selectedCollection._id}`);
+    } else {
+      console.error("Missing walletaddress or collection ID:", { walletaddress, collectionId: selectedCollection?._id });
+      if (walletaddress) {
+        navigate(`/${walletaddress}/items`);
+      }
     }
   };
 
   const modalContent = (
     <>
-      {/* Backdrop */}
+      {/* Full Screen Backdrop with Black Opacity */}
       <div
-        className="fixed inset-0 bg-[#0C0C0C] bg-opacity-95 z-[2000]"
+        className="fixed inset-0 bg-black bg-opacity-80 z-[2000]"
         onClick={onClose}
       >
         <div
-          className="fixed inset-0 bg-[#0C0C0C] z-[2000] flex items-center justify-center"
+          className="fixed inset-0 z-[2000] flex flex-col p-8"
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="bg-[#151516] border border-[#2C2C2C] rounded-[10px] p-8 max-w-md w-full mx-4">
-            {/* Close Button */}
-            <button
-              onClick={onClose}
-              className="absolute top-4 right-4 text-gray-500 hover:text-white text-2xl z-[3000] cursor-pointer"
-            >
-              &times;
-            </button>
+          {/* Close Button */}
+          <button
+            onClick={onClose}
+            className="absolute top-8 right-8 text-white hover:text-gray-300 text-3xl z-[3000] cursor-pointer"
+          >
+            &times;
+          </button>
 
-            {/* Modal Content */}
-            <div className="space-y-6">
-              <div>
-                <h2 className="text-white font-bold text-[40px] font-sans mb-2">
+          {/* Full Screen Modal Content */}
+          <div className="flex-1 flex flex-col items-center justify-center w-full">
+            <div className="space-y-8 w-full max-w-2xl">
+              <div className="flex flex-col items-center justify-center text-center">
+              <img src="/itemstemp/create-nft-gif.gif" alt="" className="w-60 h-60 object-cover flex justify-center items-center " />
+                <h2 className="text-white font-bold text-[55px] font-sans mb-4">
                   {selectedCollection.name}
                 </h2>
-                <p className="text-gray-400 text-[14px]">
+                <p className="text-gray-400 text-[18px]">
                   What would you like to do with this collection?
                 </p>
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-6">
                 {/* Button 1: View Existing NFTs */}
                 <button
                   onClick={handleViewNFTs}
-                  className="w-full bg-[#8E3E63] hover:bg-[#7a3554] text-white font-[500] p-4 rounded-[7px] transition-colors duration-300 flex items-center justify-center gap-3"
+                  className="w-full bg-[#8E3E63] hover:bg-[#7a3554] text-white font-[500] p-6 rounded-[10px] transition-colors duration-300 flex items-center justify-center gap-3 text-[20px] cursor-pointer"
                 >
-                  <span className="text-[18px]">View Existing NFTs</span>
+                  <span>View Existing NFTs</span>
                 </button>
 
                 {/* Button 2: Create NFT */}
                 <button
-                  onClick={() => {
-                    onClose();
-                    onCreateNFT();
-                  }}
-                  className="w-full bg-[#B6771D] hover:bg-[#9d6518] text-white font-[500] p-4 rounded-[7px] transition-colors duration-300 flex items-center justify-center gap-3"
+                  onClick={onCreateNFT}
+                  className="w-full bg-[#B6771D] hover:bg-[#9d6518] text-white font-[500] p-6 rounded-[10px] transition-colors duration-300 flex items-center justify-center gap-3 text-[20px] cursor-pointer"
                 >
-                  <span className="text-[18px]">Create NFT</span>
+                  <span>Create NFT</span>
                 </button>
               </div>
             </div>

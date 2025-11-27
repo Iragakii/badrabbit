@@ -32,7 +32,7 @@ const ButtonUploadImg = ({ onFileSelect }: ButtonUploadImgProps) => {
           ) : (
             <div className="flex flex-col items-center gap-4">
               <img
-                src="/public/createdui/upload-icon.svg"
+                src="/public/createdui/upload-i.svg"
                 alt="Upload"
                 className="w-16 h-16 opacity-50"
               />
@@ -56,9 +56,13 @@ const ButtonUploadImg = ({ onFileSelect }: ButtonUploadImgProps) => {
             setPreview(null);
             onFileSelect(null);
           }}
-          className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-red-600"
+          className="absolute top-2 right-2 bg-red-500 text-white rounded-[4px] w-5 h-5 flex items-center justify-center hover:bg-red-600"
         >
-          ×
+            <img
+                src="/public/createdui/close.svg"
+                alt="Upload"
+                className="w-3 h-3 opacity-50"
+              />
         </button>
       )}
     </div>
