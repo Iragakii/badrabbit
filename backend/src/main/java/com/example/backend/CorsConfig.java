@@ -14,9 +14,17 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins(frontendUrl)
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                // Use allowedOriginPatterns to support wildcards and multiple origins
+                .allowedOriginPatterns(
+                    frontendUrl,
+                    "https://badrabbit-iragaki-nft.onrender.com",
+                    "http://localhost:5173",
+                    "http://localhost:4173",
+                    "https://*.onrender.com" // Allow all Render subdomains
+                )
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
                 .allowedHeaders("*")
-                .allowCredentials(true);
+                .allowCredentials(true)
+                .maxAge(3600); // Cache preflight requests for 1 hour
     }
 }

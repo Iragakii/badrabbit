@@ -22,5 +22,10 @@ export default defineConfig({
     host: '0.0.0.0',
     port: parseInt(process.env.PORT || '4173'),
     strictPort: false,
+    allowedHosts: [
+      'badrabbit-iragaki-nft.onrender.com',
+      'localhost',
+      '.onrender.com', // Allow all Render subdomains
+    ],
   },
 })
