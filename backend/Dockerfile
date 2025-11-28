@@ -17,9 +17,11 @@ WORKDIR /app
 # Copy the JAR from build stage
 COPY --from=build /app/target/backend-0.0.1-SNAPSHOT.jar app.jar
 
-# Expose port (Render will set PORT env var)
-EXPOSE 8081
+# Expose port (Render sets PORT env var automatically, default is 10000)
+# Spring Boot will bind to 0.0.0.0 and use PORT env var
+EXPOSE 10000
 
 # Run the application
+# Render automatically sets PORT env var, Spring Boot will read it from application.properties
 ENTRYPOINT ["java", "-jar", "app.jar"]
 
