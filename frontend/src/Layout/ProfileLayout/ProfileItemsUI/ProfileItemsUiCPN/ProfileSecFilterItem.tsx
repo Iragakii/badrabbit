@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { useAuth } from "../../../../../Auth/AuthContext";
-import { getApiUrl } from "../../../../../config/api";
+import { getApiUrl } from "../../../../config/api";
 
 interface Collection {
   id?: string;

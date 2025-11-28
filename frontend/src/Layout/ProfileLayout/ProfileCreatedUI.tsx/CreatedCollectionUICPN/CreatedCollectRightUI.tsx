@@ -7,7 +7,7 @@ import CreatedCollectHeaderFilter from "./CreatedCollectHeaderFilter";
 import CreatedCollectHeaderFilterDate from "./CreatedCollectionFilterDate";
 import ModalNFTChoice from "../../../../Modal/ModalCreateNFT/ModalNFTChoice";
 import ModalCreateNFT from "../../../../Modal/ModalCreateNFT/ModalCreateNFT";
-import { getApiUrl } from "../../../../../config/api";
+import { getApiUrl } from "../../../../config/api";
 
 
 

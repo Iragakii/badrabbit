@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { getApiUrl } from '../../../../config/api';
+import { getApiUrl } from '../../../config/api';
 
 const BtnPublishContractColle = ({ selectedFile, collectionData }: {
   selectedFile: File | null;

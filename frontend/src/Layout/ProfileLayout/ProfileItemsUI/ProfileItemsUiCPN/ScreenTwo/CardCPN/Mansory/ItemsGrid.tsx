@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import Masonry from "react-masonry-css";
 import RowCardOne from "./RowCardOne";
 import { useAuth } from "../../../../../../../../Auth/AuthContext";
-import { getApiUrl } from "../../../../../../../../config/api";
+import { getApiUrl } from "../../../../../../../config/api";
 
 type ItemType = {
   id?: string | number;

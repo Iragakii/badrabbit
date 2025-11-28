@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { getApiUrl } from "../../../../../../config/api";
+import { getApiUrl } from "../../../../../config/api";
 
 const useUserProfile = (walletaddress: string | undefined) => {
   const [loading, setLoading] = useState(true);

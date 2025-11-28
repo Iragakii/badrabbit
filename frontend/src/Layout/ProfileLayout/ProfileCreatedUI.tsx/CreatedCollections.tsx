@@ -4,7 +4,7 @@ import DefaultImgCreatedUI from "./DefaultImgCreatedUI";
 import TitleaDesCreatedUI from "./TitleaDesCreatedUI";
 import CreateColle from "./CreateColle";
 import CreatedCollectionUI from "./CreatedCollectionUI";
-import { getApiUrl } from "../../../../config/api";
+import { getApiUrl } from "../../../config/api";
 
 interface Collection {
   _id: string;
