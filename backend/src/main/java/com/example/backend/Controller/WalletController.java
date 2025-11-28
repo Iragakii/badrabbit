@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/wallet")
 public class WalletController {
@@ -41,5 +43,16 @@ public class WalletController {
 
         ResponseEntity<Object> response = restTemplate.exchange(url, HttpMethod.GET, entity, Object.class);
         return response;
+    }
+
+    @GetMapping("/{address}/weth-balance")
+    public ResponseEntity<Map<String, Object>> getWETHBalance(@PathVariable String address) {
+        // Mock WETH balance for testing - return 0 WETH
+        // In production, this would query the blockchain or user account
+        return ResponseEntity.ok(Map.of(
+            "balance", 0.0,
+            "currency", "WETH",
+            "address", address.toLowerCase()
+        ));
     }
 }

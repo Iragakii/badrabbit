@@ -59,6 +59,10 @@ function AppRoutes() {
         path="/:walletaddress/favorite"
         element={<ProfileUI />}
       />
+      <Route
+        path="/:walletaddress/item/:itemId/:contractAddress"
+        element={<ProfileUI />}
+      />
         <Route
         path="/studio/create/collection"
         element={<CreateCollectionLayout />}

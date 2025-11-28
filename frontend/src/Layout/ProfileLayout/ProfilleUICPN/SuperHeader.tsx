@@ -3,6 +3,7 @@ import ProfileCreatedUI from "../ProfileCreatedUI.tsx/ProfileCreatedUI";
 import ProfileItemsUI from "../ProfileItemsUI/ProfileItemsUI";
 import NavContainer from "./ProfileNav/NavContainer";
 import SecSuperHeader from "./SecSuperHeader";
+import ModalItemDetail from "../../../Modal/ModalItemDetail/ModalItemDetail";
 import { useLocation } from "react-router-dom";
 
 const SuperHeader = () => {
@@ -12,6 +13,14 @@ const SuperHeader = () => {
   
   const showProfileUI = isCreated || isCreating;
   const isItems = location.pathname.endsWith('/items');
+  
+  // Check if we're on an item detail page
+  const isItemDetail = location.pathname.includes('/item/');
+  
+  const handleCloseModal = () => {
+    // Modal handles its own navigation
+  };
+  
   return (
     <>
       <div className="space-y-6 bg-[#0C0C0C] text-white">
@@ -23,7 +32,7 @@ const SuperHeader = () => {
         </div>
       </div>
       {/* Content components rendered outside fixed header for scrolling */}
-      {isItems && (
+      {isItems && !isItemDetail && (
         <div className="bg-[#0C0C0C]">
           <ProfileItemsUI />
         </div>
@@ -32,6 +41,10 @@ const SuperHeader = () => {
         <div className="bg-[#0C0C0C]">
           <ProfileCreatedUI />
         </div>
+      )}
+      {/* Item Detail Modal */}
+      {isItemDetail && (
+        <ModalItemDetail onClose={handleCloseModal} />
       )}
     </>
   );

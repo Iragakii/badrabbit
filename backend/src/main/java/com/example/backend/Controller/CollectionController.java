@@ -62,4 +62,14 @@ public class CollectionController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @GetMapping("/name/{name}")
+    public ResponseEntity<?> getCollectionByName(@PathVariable String name) {
+        if (name == null || name.trim().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        return collectionRepository.findByName(name.trim())
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 }

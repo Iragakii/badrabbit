@@ -268,14 +268,47 @@ const ModalCreateNFT = ({ onClose, selectedCollection }: ModalCreateNFTProps) =>
                   <label className="text-white font-semibold text-[14px]">
                     Supply <span className="text-red-500">*</span>
                   </label>
-                  <input
-                    type="number"
-                    placeholder="Enter supply (e.g., 1, 100)"
-                    min="1"
-                    className="bg-[#141415] p-3 rounded-[8px] border border-[#181C14] text-white placeholder-gray-500"
-                    value={formData.supply}
-                    onChange={(e) => handleInputChange("supply", e.target.value)}
-                  />
+                  <div className="relative">
+                    <input
+                      type="number"
+                      placeholder="Enter supply (e.g., 1, 100)"
+                      min="1"
+                      className="bg-[#141415] p-3 pr-20 rounded-[8px] border border-[#181C14] text-white placeholder-gray-500 w-full"
+                      value={formData.supply}
+                      onChange={(e) => handleInputChange("supply", e.target.value)}
+                    />
+                    <div className="absolute right-1 top-1/2 -translate-y-1/2 flex flex-col gap-0.5">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const current = parseInt(formData.supply) || 0;
+                          handleInputChange("supply", String(current + 1));
+                        }}
+                        className="w-8 h-4 bg-[#2C3930] hover:bg-[#1F7D53] active:bg-[#255F38] text-white text-xs rounded-t flex items-center justify-center transition-all duration-150 cursor-pointer border border-[#181C14] hover:border-[#1F7D53]"
+                        title="Increase"
+                      >
+                        <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const current = parseInt(formData.supply) || 1;
+                          if (current > 1) {
+                            handleInputChange("supply", String(current - 1));
+                          }
+                        }}
+                        className="w-8 h-4 bg-[#2C3930] hover:bg-[#1F7D53] active:bg-[#255F38] text-white text-xs rounded-b flex items-center justify-center transition-all duration-150 cursor-pointer border border-[#181C14] hover:border-[#1F7D53] disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={parseInt(formData.supply) <= 1}
+                        title="Decrease"
+                      >
+                        <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clipRule="evenodd" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Description */}

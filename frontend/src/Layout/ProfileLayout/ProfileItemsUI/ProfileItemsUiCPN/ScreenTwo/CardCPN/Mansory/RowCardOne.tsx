@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 interface MediaCardProps {
   imageUrl: string;
@@ -8,7 +9,20 @@ interface MediaCardProps {
   chainName?: string;
   itemName?: string;
   collectionName?: string;
+  itemId?: string | number;
+  contractAddress?: string;
 }
+
+// Generate tokenId from item ID (hash-based conversion)
+const generateTokenId = (itemId: string | number | undefined): string => {
+  if (!itemId) return "0";
+  const idStr = String(itemId);
+  // Convert MongoDB ObjectId to a numeric tokenId
+  const hash = idStr.split('').reduce((acc, char) => {
+    return ((acc << 5) - acc) + char.charCodeAt(0);
+  }, 0);
+  return Math.abs(hash).toString();
+};
 
 const RowCardOne: React.FC<MediaCardProps> = ({
   imageUrl,
@@ -18,10 +32,24 @@ const RowCardOne: React.FC<MediaCardProps> = ({
   chainName = "POL",
   itemName = "Item Name",
   collectionName = "Collection Name",
+  itemId,
+  contractAddress,
 }) => {
+  const navigate = useNavigate();
+  const { walletaddress } = useParams<{ walletaddress?: string }>();
+
+  const handleClick = () => {
+    if (!itemId || !walletaddress) return;
+    const tokenId = generateTokenId(itemId);
+    // Use contractAddress if provided, otherwise use a default placeholder
+    const finalContractAddress = contractAddress || "0x0000000000000000000000000000000000000000";
+    navigate(`/${walletaddress}/item/${itemId}/${finalContractAddress}`);
+  };
+
   return (
     <div
-      className={`relative rounded-xl overflow-hidden ${maxWidthClass} w-full transform transition-all duration-300 ease-in-out hover:scale-[1.02] group`}
+      className={`relative rounded-xl overflow-hidden ${maxWidthClass} w-full transform transition-all duration-300 ease-in-out hover:scale-[1.02] group cursor-pointer`}
+      onClick={handleClick}
     >
       {/* Image */}
       <img

@@ -211,6 +211,15 @@ const ItemsGrid = ({ walletaddress }: ItemsGridProps) => {
           const itemId = item.id || item._id || index;
           const imageUrl = item.imageUrl || "";
           console.log("Rendering item:", { itemId, name: item.name, imageUrl, collectionName: item.collectionName });
+          
+          // Find collection to get contractAddress
+          const itemCollection = collections.find((c) => {
+            const cName = (c.name || "").toLowerCase().trim();
+            const itemCollectionName = (item.collectionName || "").toLowerCase().trim();
+            return cName === itemCollectionName;
+          });
+          const contractAddress = itemCollection?.contractAddress || "0x0000000000000000000000000000000000000000";
+          
           return (
             <div key={itemId} className="w-full">
               <RowCardOne
@@ -221,6 +230,8 @@ const ItemsGrid = ({ walletaddress }: ItemsGridProps) => {
                 chainName={item.chainName || "ETH"}
                 itemName={item.name || "Unnamed NFT"}
                 collectionName={item.collectionName || "Unnamed Collection"}
+                itemId={itemId}
+                contractAddress={contractAddress}
               />
                <div className="mt-7"></div>
             </div>

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.*;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -74,5 +75,33 @@ public class UserController {
             e.printStackTrace();
             return ResponseEntity.status(500).body("Failed to update profile");
         }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> searchUsers(@RequestParam String q) {
+        if (q == null || q.trim().isEmpty()) {
+            return ResponseEntity.ok(List.of());
+        }
+        
+        String query = q.trim();
+        List<User> users = new java.util.ArrayList<>();
+        
+        // Search by username
+        users.addAll(userRepository.findByUsernameContainingIgnoreCase(query));
+        
+        // Search by wallet address (if it looks like an address)
+        if (query.startsWith("0x") && query.length() >= 10) {
+            users.addAll(userRepository.findByWalletAddressContainingIgnoreCase(query));
+        }
+        
+        // Remove duplicates based on wallet address
+        Map<String, User> uniqueUsers = new java.util.HashMap<>();
+        for (User user : users) {
+            if (user != null && user.getWalletAddress() != null && !user.getWalletAddress().trim().isEmpty()) {
+                uniqueUsers.put(user.getWalletAddress().toLowerCase(), user);
+            }
+        }
+        
+        return ResponseEntity.ok(new java.util.ArrayList<>(uniqueUsers.values()));
     }
 }

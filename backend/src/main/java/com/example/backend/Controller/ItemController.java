@@ -33,5 +33,45 @@ public class ItemController {
         Item saved = itemRepository.save(item);
         return ResponseEntity.ok(saved);
     }
+
+    @GetMapping("/id/{id}")
+    public ResponseEntity<Item> getItemById(@PathVariable String id) {
+        System.out.println("Fetching item with ID: " + id);
+        if (id == null || id.trim().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        return itemRepository.findById(id.trim())
+                .map(item -> {
+                    System.out.println("Found item: " + item.getName());
+                    return ResponseEntity.ok(item);
+                })
+                .orElseGet(() -> {
+                    System.out.println("Item not found with ID: " + id);
+                    return ResponseEntity.notFound().build();
+                });
+    }
+    
+    // Keep the original route for backward compatibility, but check if it's not "owner"
+    @GetMapping("/{id}")
+    public ResponseEntity<Item> getItemByIdLegacy(@PathVariable String id) {
+        // If the path is "owner", this shouldn't match (Spring should route to /owner/{walletAddress} first)
+        // But just in case, check if it looks like a wallet address (starts with 0x)
+        if (id != null && id.startsWith("0x")) {
+            return ResponseEntity.badRequest().build();
+        }
+        System.out.println("Fetching item with ID (legacy route): " + id);
+        if (id == null || id.trim().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        return itemRepository.findById(id.trim())
+                .map(item -> {
+                    System.out.println("Found item: " + item.getName());
+                    return ResponseEntity.ok(item);
+                })
+                .orElseGet(() -> {
+                    System.out.println("Item not found with ID: " + id);
+                    return ResponseEntity.notFound().build();
+                });
+    }
 }
 
