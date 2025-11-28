@@ -13,11 +13,25 @@ Make sure all files are committed and pushed to your Git repository.
 
 ### 2. Deploy Backend (Spring Boot)
 
+**Option A: Using Docker (Recommended if Java language not available)**
+
 1. Go to https://dashboard.render.com/web/new
 2. Connect your Git repository
 3. Configure:
    - **Name**: `nft-backend`
-   - **Environment**: `Java`
+   - **Environment**: `Docker` (choose Docker if Java not available)
+   - **Root Directory**: `backend` (or leave empty if Dockerfile is in root)
+   - **Dockerfile Path**: `backend/Dockerfile` (or just `Dockerfile` if root is backend)
+   - **Docker Context**: `backend` (or leave empty)
+
+**Option B: Using Java Runtime (if available)**
+
+1. Go to https://dashboard.render.com/web/new
+2. Connect your Git repository
+3. Configure:
+   - **Name**: `nft-backend`
+   - **Language**: `Java` or `Maven` (if available)
+   - **Root Directory**: Leave empty
    - **Build Command**: `cd backend && mvn clean package -DskipTests`
    - **Start Command**: `cd backend && java -jar target/backend-0.0.1-SNAPSHOT.jar`
 4. Add environment variables (see `ENV_VARIABLES.md`)
@@ -30,7 +44,8 @@ Make sure all files are committed and pushed to your Git repository.
 2. Connect the same Git repository
 3. Configure:
    - **Name**: `nft-frontend`
-   - **Environment**: `Node`
+   - **Language**: `Node` (correct for React/Vite)
+   - **Root Directory**: Leave empty
    - **Build Command**: `cd frontend && npm install && npm run build`
    - **Start Command**: `cd frontend && npm run preview`
 4. Add environment variable:

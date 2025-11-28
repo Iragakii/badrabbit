@@ -14,12 +14,28 @@ Make sure your code is pushed to a Git repository (GitHub, GitLab, or Bitbucket)
 
 ## Step 2: Deploy Backend Service
 
+**Option A: Using Docker (Recommended)**
+
 1. Go to https://dashboard.render.com/web/new
 2. Click "New" → "Web Service"
 3. Connect your repository
 4. Configure the service:
    - **Name**: `nft-backend`
-   - **Environment**: `Java`
+   - **Environment**: `Docker`
+   - **Root Directory**: `backend` (or leave empty)
+   - **Dockerfile Path**: `backend/Dockerfile`
+   - **Docker Context**: `backend` (or leave empty)
+   - **Plan**: Choose a plan (Starter is fine for testing)
+
+**Option B: Using Java/Maven (if available)**
+
+1. Go to https://dashboard.render.com/web/new
+2. Click "New" → "Web Service"
+3. Connect your repository
+4. Configure the service:
+   - **Name**: `nft-backend`
+   - **Environment**: `Java` or `Maven` (if available)
+   - **Root Directory**: Leave empty
    - **Build Command**: `cd backend && mvn clean package -DskipTests`
    - **Start Command**: `cd backend && java -jar target/backend-0.0.1-SNAPSHOT.jar`
    - **Plan**: Choose a plan (Starter is fine for testing)
