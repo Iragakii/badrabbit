@@ -47,7 +47,7 @@ Make sure all files are committed and pushed to your Git repository.
    - **Language**: `Node` (correct for React/Vite)
    - **Root Directory**: Leave empty
    - **Build Command**: `cd frontend && npm install && npm run build`
-   - **Start Command**: `cd frontend && npm run preview`
+   - **Start Command**: `cd frontend && vite preview --host 0.0.0.0 --port $PORT`
 4. Add environment variable:
    - `VITE_API_BASE_URL` = your backend URL from step 2
 5. Click "Create Web Service"

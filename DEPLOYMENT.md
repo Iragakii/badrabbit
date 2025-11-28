@@ -67,7 +67,7 @@ Make sure your code is pushed to a Git repository (GitHub, GitLab, or Bitbucket)
    - **Name**: `nft-frontend`
    - **Environment**: `Node`
    - **Build Command**: `cd frontend && npm install && npm run build`
-   - **Start Command**: `cd frontend && npm run preview`
+   - **Start Command**: `cd frontend && vite preview --host 0.0.0.0 --port $PORT`
    - **Plan**: Choose a plan
 
 5. Add Environment Variables:

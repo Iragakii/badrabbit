@@ -37,7 +37,7 @@ services:
     name: nft-frontend
     env: node
     buildCommand: cd frontend && npm install && npm run build
-    startCommand: cd frontend && npm run preview
+    startCommand: cd frontend && vite preview --host 0.0.0.0 --port $PORT
     envVars:
       - key: VITE_API_BASE_URL
         sync: false
