@@ -5,6 +5,8 @@ export const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL as string) || 'ht
 export const getApiUrl = (endpoint: string): string => {
   // Remove leading slash if present to avoid double slashes
   const cleanEndpoint = endpoint.startsWith('/') ? endpoint.slice(1) : endpoint;
-  return `${API_BASE_URL}/${cleanEndpoint}`;
+  // Remove trailing slash from base URL if present
+  const cleanBaseUrl = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
+  return `${cleanBaseUrl}/${cleanEndpoint}`;
 };
 
