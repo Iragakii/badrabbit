@@ -3,6 +3,7 @@ import { Fragment, useState } from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faWallet, faEnvelope } from "@fortawesome/free-solid-svg-icons"
 import { useAuth } from '../../../Auth/AuthContext';
+import { getApiUrl } from '../../config/api';
 
 
 interface ModalLoginProps {
@@ -29,8 +30,18 @@ const ModalLogin = ({ isOpen, onClose }: ModalLoginProps) => {
       console.log("Connected wallet:", wallet);
 
       // 2. Request login message from backend
-      const messageRes = await fetch(`/api/auth/message?address=${wallet}`);
-      const { message } = await messageRes.json();
+      const messageUrl = getApiUrl(`api/auth/message?address=${wallet}`);
+      const messageRes = await fetch(messageUrl, {
+        credentials: 'include',
+      });
+      
+      if (!messageRes.ok) {
+        const errorText = await messageRes.text();
+        throw new Error(`Failed to get message: ${messageRes.status} ${errorText}`);
+      }
+      
+      const messageData = await messageRes.json();
+      const { message } = messageData;
 
       // 3. Sign the message with MetaMask
       const signature = await window.ethereum.request({
@@ -39,7 +50,7 @@ const ModalLogin = ({ isOpen, onClose }: ModalLoginProps) => {
       });
 
       // 4. Send signature to backend for verification
-      const verifyRes = await fetch("/api/auth/verify", {
+      const verifyRes = await fetch(getApiUrl("api/auth/verify"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: 'include',
@@ -68,7 +79,7 @@ const ModalLogin = ({ isOpen, onClose }: ModalLoginProps) => {
 
   async function fetchTokens(address: string) {
     try {
-      const res = await fetch(`/api/wallet/${address}/erc20`, {
+      const res = await fetch(getApiUrl(`api/wallet/${address}/erc20`), {
         credentials: 'include',
       });
       const json = await res.json();
