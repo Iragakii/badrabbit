@@ -1,8 +1,9 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../src/config/api';
 
 // Configure axios defaults
-axios.defaults.baseURL = 'http://localhost:8081';
+axios.defaults.baseURL = API_BASE_URL;
 axios.defaults.withCredentials = true;
 
 // Add axios interceptor for token handling

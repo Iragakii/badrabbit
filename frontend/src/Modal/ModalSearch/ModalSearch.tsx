@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
+import { getApiUrl } from "../../config/api";
 
 interface User {
   id?: string;
@@ -61,7 +62,7 @@ const ModalSearch = ({ isOpen, onClose, initialQuery = "" }: ModalSearchProps) =
 
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:8081/api/user/search?q=${encodeURIComponent(query)}`);
+      const response = await fetch(getApiUrl(`api/user/search?q=${encodeURIComponent(query)}`));
       if (response.ok) {
         const data = await response.json();
         setUsers(data || []);

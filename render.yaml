@@ -1,0 +1,46 @@
+services:
+  # Backend Service (Spring Boot)
+  - type: web
+    name: nft-backend
+    env: java
+    buildCommand: cd backend && mvn clean package -DskipTests
+    startCommand: cd backend && java -jar target/backend-0.0.1-SNAPSHOT.jar
+    envVars:
+      - key: PORT
+        value: 8081
+      - key: MONGODB_URI
+        sync: false
+      - key: MONGODB_DATABASE
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: MORALIS_API_KEY
+        sync: false
+      - key: X_CLIENT_ID
+        sync: false
+      - key: X_CLIENT_SECRET
+        sync: false
+      - key: X_REDIRECT_URI
+        sync: false
+      - key: FRONTEND_REDIRECT_URI
+        sync: false
+      - key: APILLON_API_KEY
+        sync: false
+      - key: APILLON_API_SECRET
+        sync: false
+      - key: APILLON_BUCKET_UUID
+        sync: false
+    healthCheckPath: /api/auth/me
+    plan: starter
+
+  # Frontend Service (React/Vite)
+  - type: web
+    name: nft-frontend
+    env: node
+    buildCommand: cd frontend && npm install && npm run build
+    startCommand: cd frontend && npm run preview
+    envVars:
+      - key: VITE_API_BASE_URL
+        sync: false
+    plan: starter
+
