@@ -6,6 +6,7 @@ import CreateColle from "./CreateColle";
 import CreatedCollectionUI from "./CreatedCollectionUI";
 import { getApiUrl } from "../../../config/api";
 
+
 interface Collection {
   _id: string;
   name: string;

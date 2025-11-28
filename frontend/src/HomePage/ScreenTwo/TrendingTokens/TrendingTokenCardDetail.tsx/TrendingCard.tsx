@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import EachTrendingCardCPN from "./EachTrendingCardCPN";
 import { getApiUrl } from "../../../../config/api";
 
+
 interface Token {
   id: string;
   name: string;
