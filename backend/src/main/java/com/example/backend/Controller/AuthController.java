@@ -30,11 +30,20 @@ public class AuthController {
     private final Map<String, String> pendingMessages = new ConcurrentHashMap<>();
 
     @GetMapping("/message")
-    public Map<String, String> getMessage(@RequestParam String address) {
-        String nonce = UUID.randomUUID().toString();
-        String message = "Login to MyApp with wallet " + address + "\nNonce: " + nonce;
-        pendingMessages.put(address.toLowerCase(), message);
-        return Map.of("message", message);
+    public ResponseEntity<Map<String, String>> getMessage(@RequestParam String address) {
+        try {
+            if (address == null || address.trim().isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of("error", "Address parameter is required"));
+            }
+            
+            String nonce = UUID.randomUUID().toString();
+            String message = "Login to MyApp with wallet " + address + "\nNonce: " + nonce;
+            pendingMessages.put(address.toLowerCase(), message);
+            return ResponseEntity.ok(Map.of("message", message));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(Map.of("error", "Internal server error: " + e.getMessage()));
+        }
     }
 
     @PostMapping("/verify")
