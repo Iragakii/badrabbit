@@ -10,7 +10,7 @@ const ButtonDirectSocialWeb = () => {
         <a href={hrefLink} target="_blank" rel="noopener noreferrer">
           <button className="cursor-pointer hover:scale-120 transition">
             <img
-              src="/public/settingprofile/moon.svg"
+              src="/settingprofile/moon.svg"
               alt=""
               className="w-8 h-8"
             />

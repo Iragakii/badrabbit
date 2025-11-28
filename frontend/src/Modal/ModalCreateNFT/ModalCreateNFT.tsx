@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { useAuth } from "../../../Auth/AuthContext";
 import { useParams, useNavigate } from "react-router-dom";
 import ButtonUploadImg from "./ModalCreateNFTCPN/ButtonUploadImg";
+import { getApiUrl } from "../../config/api";
 
 interface ModalCreateNFTProps {
   onClose: () => void;
@@ -54,7 +55,7 @@ const ModalCreateNFT = ({ onClose, selectedCollection }: ModalCreateNFTProps) =>
 
   useEffect(() => {
     if (!walletaddress) return;
-    fetch(`http://localhost:8081/api/collections/owner/${walletaddress}`)
+    fetch(getApiUrl(`api/collections/owner/${walletaddress}`))
       .then((res) => res.json())
       .then((data) => {
         console.log("Fetched collections for NFT creation:", data);
@@ -104,7 +105,7 @@ const ModalCreateNFT = ({ onClose, selectedCollection }: ModalCreateNFTProps) =>
     const formData = new FormData();
     formData.append("file", file);
 
-    const uploadResponse = await fetch("http://localhost:8081/api/collections/upload-image", {
+    const uploadResponse = await fetch(getApiUrl("api/collections/upload-image"), {
       method: "POST",
       body: formData,
     });
@@ -153,7 +154,7 @@ const ModalCreateNFT = ({ onClose, selectedCollection }: ModalCreateNFTProps) =>
       });
 
       // Create NFT item
-      const response = await fetch("http://localhost:8081/api/items", {
+      const response = await fetch(getApiUrl("api/items"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

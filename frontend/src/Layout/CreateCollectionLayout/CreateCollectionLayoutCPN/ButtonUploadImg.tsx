@@ -49,7 +49,7 @@ const ButtonUploadImg = ({ onFileSelect }: ButtonUploadImgProps) => {
                    setImageSrc(null);
                  }}
                >
-                 <img src="/public/createdui/trash.svg" alt="" className='w-5 h-5' />
+                 <img src="/createdui/trash.svg" alt="" className='w-5 h-5' />
                </button>
                <button className='cursor-pointer p-2 bg-[#0C0C0C] rounded-[8px] border-[#181C14] border-1'><img src="/brush.svg" alt="" className='w-5 h-5' /></button>
 

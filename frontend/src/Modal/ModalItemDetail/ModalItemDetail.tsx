@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useParams, useNavigate } from "react-router-dom";
 import ModalMakeOffer from "../ModalMakeOffer/ModalMakeOffer";
+import { getApiUrl } from "../../config/api";
 
 interface Item {
   id?: string;
@@ -94,10 +95,10 @@ const ModalItemDetail = ({ onClose }: ModalItemDetailProps) => {
     // Fetch item details - try both routes
     const fetchItem = async () => {
       // First try the specific route
-      let response = await fetch(`http://localhost:8081/api/items/id/${itemId}`);
+      let response = await fetch(getApiUrl(`api/items/id/${itemId}`));
       if (!response.ok) {
         // Fallback to the legacy route
-        response = await fetch(`http://localhost:8081/api/items/${itemId}`);
+        response = await fetch(getApiUrl(`api/items/${itemId}`));
       }
       if (!response.ok) {
         throw new Error("Item not found");
@@ -112,12 +113,12 @@ const ModalItemDetail = ({ onClose }: ModalItemDetailProps) => {
         
         // Fetch collection by name to get contractAddress
         if (data.collectionName) {
-          return fetch(`http://localhost:8081/api/collections/name/${encodeURIComponent(data.collectionName)}`)
+          return fetch(getApiUrl(`api/collections/name/${encodeURIComponent(data.collectionName)}`))
             .then((res) => {
               if (res.ok) return res.json();
               // If not found by name, try to find by owner wallet
               if (data.ownerWallet) {
-                return fetch(`http://localhost:8081/api/collections/owner/${data.ownerWallet}`)
+                return fetch(getApiUrl(`api/collections/owner/${data.ownerWallet}`))
                   .then((res2) => {
                     if (res2.ok) return res2.json().then((collections: Collection[]) => {
                       return collections.find((c) => 
@@ -151,7 +152,7 @@ const ModalItemDetail = ({ onClose }: ModalItemDetailProps) => {
   useEffect(() => {
     if (!item?.collectionName || !item?.ownerWallet) return;
     
-    fetch(`http://localhost:8081/api/items/owner/${item.ownerWallet}`)
+    fetch(getApiUrl(`api/items/owner/${item.ownerWallet}`))
       .then((res) => res.ok ? res.json() : [])
       .then((data: Item[]) => {
         // Filter items from the same collection, excluding the current item
@@ -173,7 +174,7 @@ const ModalItemDetail = ({ onClose }: ModalItemDetailProps) => {
     if (!itemId) return;
 
     // Fetch top offer
-    fetch(`http://localhost:8081/api/offers/item/${itemId}/top`)
+    fetch(getApiUrl(`api/offers/item/${itemId}/top`))
       .then((res) => res.ok ? res.json() : null)
       .then((data) => {
         if (data && data.amount) {
@@ -185,7 +186,7 @@ const ModalItemDetail = ({ onClose }: ModalItemDetailProps) => {
       .catch((err) => console.error("Error fetching top offer:", err));
 
     // Fetch price history
-    fetch(`http://localhost:8081/api/price-history/item/${itemId}`)
+    fetch(getApiUrl(`api/price-history/item/${itemId}`))
       .then((res) => res.ok ? res.json() : [])
       .then((data) => {
         setPriceHistory(data || []);
@@ -193,7 +194,7 @@ const ModalItemDetail = ({ onClose }: ModalItemDetailProps) => {
       .catch((err) => console.error("Error fetching price history:", err));
 
     // Fetch orders (offers)
-    fetch(`http://localhost:8081/api/offers/item/${itemId}`)
+    fetch(getApiUrl(`api/offers/item/${itemId}`))
       .then((res) => res.ok ? res.json() : [])
       .then((data) => {
         setOrders(data || []);
@@ -208,7 +209,7 @@ const ModalItemDetail = ({ onClose }: ModalItemDetailProps) => {
     if (!itemId) return;
     
     // Refresh top offer
-    fetch(`http://localhost:8081/api/offers/item/${itemId}/top`)
+    fetch(getApiUrl(`api/offers/item/${itemId}/top`))
       .then((res) => res.ok ? res.json() : null)
       .then((data) => {
         if (data && data.amount) {
@@ -218,7 +219,7 @@ const ModalItemDetail = ({ onClose }: ModalItemDetailProps) => {
       .catch((err) => console.error("Error refreshing top offer:", err));
 
     // Refresh price history
-    fetch(`http://localhost:8081/api/price-history/item/${itemId}`)
+    fetch(getApiUrl(`api/price-history/item/${itemId}`))
       .then((res) => res.ok ? res.json() : [])
       .then((data) => {
         setPriceHistory(data || []);
@@ -226,7 +227,7 @@ const ModalItemDetail = ({ onClose }: ModalItemDetailProps) => {
       .catch((err) => console.error("Error refreshing price history:", err));
 
     // Refresh orders
-    fetch(`http://localhost:8081/api/offers/item/${itemId}`)
+    fetch(getApiUrl(`api/offers/item/${itemId}`))
       .then((res) => res.ok ? res.json() : [])
       .then((data) => {
         setOrders(data || []);

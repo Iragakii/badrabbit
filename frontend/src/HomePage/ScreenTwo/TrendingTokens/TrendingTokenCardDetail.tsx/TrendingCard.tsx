@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import EachTrendingCardCPN from "./EachTrendingCardCPN";
+import { getApiUrl } from "../../../../../config/api";
 
 interface Token {
   id: string;
@@ -15,53 +16,54 @@ interface TokenData {
   change: number;
 }
 
-const tokens: Token[] = [
-  {
-    id: "littlemanyu",
-    name: "Manyu",
-    symbol: "MANYU",
-    cmcLink: "https://coinmarketcap.com/vi/currencies/manyu-ethereum/",
-    api: "http://localhost:8081/api/price/chart/littlemanyu",
-  },
-  {
-    id: "freysa-ai",
-    name: "Freysa",
-    symbol: "FAI",
-    cmcLink: "https://coinmarketcap.com/vi/currencies/freysa-ai/",
-    api: "http://localhost:8081/api/price/chart/freysa-ai",
-  },
-  {
-    id: "bucky-2",
-    name: "Bucky",
-    symbol: "BUCKY",
-    cmcLink: "https://coinmarketcap.com/vi/currencies/bucky-2/",
-    api: "http://localhost:8081/api/price/chart/bucky-2",
-  },
-  {
-    id: "retard-finder-coin",
-    name: "Retard",
-    symbol: "RETARD",
-    cmcLink: "https://coinmarketcap.com/vi/currencies/retard-finder-coin/",
-    api: "http://localhost:8081/api/price/chart/retard-finder-coin",
-  },
-  {
-    id: "ski-mask-dog",
-    name: "Ski mask dog",
-    symbol: "SKI",
-    cmcLink: "https://coinmarketcap.com/vi/currencies/ski-mask-dog/",
-    api: "http://localhost:8081/api/price/chart/ski-mask-dog",
-  },
-  {
-    id: "apu-apustaja",
-    name: "Apu",
-    symbol: "APU",
-    cmcLink: "https://coinmarketcap.com/vi/currencies/apu-apustaja/",
-    api: "http://localhost:8081/api/price/chart/apu-apustaja",
-  },
-];
-
 const TrendingCard = () => {
   const [data, setData] = useState<Record<string, TokenData>>({});
+
+  // Define tokens array inside component to use getApiUrl
+  const tokens: Token[] = [
+    {
+      id: "littlemanyu",
+      name: "Manyu",
+      symbol: "MANYU",
+      cmcLink: "https://coinmarketcap.com/vi/currencies/manyu-ethereum/",
+      api: getApiUrl("api/price/chart/littlemanyu"),
+    },
+    {
+      id: "freysa-ai",
+      name: "Freysa",
+      symbol: "FAI",
+      cmcLink: "https://coinmarketcap.com/vi/currencies/freysa-ai/",
+      api: getApiUrl("api/price/chart/freysa-ai"),
+    },
+    {
+      id: "bucky-2",
+      name: "Bucky",
+      symbol: "BUCKY",
+      cmcLink: "https://coinmarketcap.com/vi/currencies/bucky-2/",
+      api: getApiUrl("api/price/chart/bucky-2"),
+    },
+    {
+      id: "retard-finder-coin",
+      name: "Retard",
+      symbol: "RETARD",
+      cmcLink: "https://coinmarketcap.com/vi/currencies/retard-finder-coin/",
+      api: getApiUrl("api/price/chart/retard-finder-coin"),
+    },
+    {
+      id: "ski-mask-dog",
+      name: "Ski mask dog",
+      symbol: "SKI",
+      cmcLink: "https://coinmarketcap.com/vi/currencies/ski-mask-dog/",
+      api: getApiUrl("api/price/chart/ski-mask-dog"),
+    },
+    {
+      id: "apu-apustaja",
+      name: "Apu",
+      symbol: "APU",
+      cmcLink: "https://coinmarketcap.com/vi/currencies/apu-apustaja/",
+      api: getApiUrl("api/price/chart/apu-apustaja"),
+    },
+  ];
 
   useEffect(() => {
     const fetchAll = async () => {

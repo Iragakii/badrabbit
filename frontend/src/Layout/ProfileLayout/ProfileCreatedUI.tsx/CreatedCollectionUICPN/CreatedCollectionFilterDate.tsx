@@ -7,7 +7,7 @@ const CreatedCollectHeaderFilterDate = () => {
         <div>
           <button className="p-2 bg-black rounded-[5px] border-1 border-[#181C14] cursor-pointer group hover:scale-95 transition duration-300">
             <img
-              src="/public/createdui/filter.svg"
+              src="/createdui/filter.svg"
               alt=""
               className="w-4 h-4 hover:scale-135 transition duration-300"
             />
@@ -42,7 +42,7 @@ const CreatedCollectHeaderFilterDate = () => {
           </div>
           <button className="p-2 items-center m-auto bg-black rounded-[5px] border-1 border-[#181C14] cursor-pointer group hover:scale-95 transition duration-300">
             <img
-              src="/public/createdui/resize-table.svg"
+              src="/createdui/resize-table.svg"
               alt=""
               className="w-4 h-4 hover:scale-135 transition duration-300"
             />

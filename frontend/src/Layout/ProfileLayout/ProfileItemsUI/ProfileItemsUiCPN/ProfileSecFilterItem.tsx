@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { useAuth } from "../../../../../Auth/AuthContext";
+import { getApiUrl } from "../../../../../config/api";
 
 interface Collection {
   id?: string;
@@ -37,11 +38,11 @@ const ProfileSecFilterItem = () => {
     const fetchData = async () => {
       try {
         // Fetch collections
-        const collectionsRes = await fetch(`http://localhost:8081/api/collections/owner/${walletaddress}`);
+        const collectionsRes = await fetch(getApiUrl(`api/collections/owner/${walletaddress}`));
         const collectionsData: Collection[] = collectionsRes.ok ? await collectionsRes.json() : [];
         
         // Fetch items
-        const itemsRes = await fetch(`http://localhost:8081/api/items/owner/${walletaddress}`);
+        const itemsRes = await fetch(getApiUrl(`api/items/owner/${walletaddress}`));
         const items: any[] = itemsRes.ok ? await itemsRes.json() : [];
         
         if (Array.isArray(items) && Array.isArray(collectionsData)) {

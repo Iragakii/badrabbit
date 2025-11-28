@@ -7,6 +7,7 @@ import CreatedCollectHeaderFilter from "./CreatedCollectHeaderFilter";
 import CreatedCollectHeaderFilterDate from "./CreatedCollectionFilterDate";
 import ModalNFTChoice from "../../../../Modal/ModalCreateNFT/ModalNFTChoice";
 import ModalCreateNFT from "../../../../Modal/ModalCreateNFT/ModalCreateNFT";
+import { getApiUrl } from "../../../../../config/api";
 
 
 
@@ -45,7 +46,7 @@ const CreatedCollectRightUI = () => {
 
   useEffect(() => {
     if (!walletaddress) return;
-    fetch(`http://localhost:8081/api/collections/owner/${walletaddress}`)
+    fetch(getApiUrl(`api/collections/owner/${walletaddress}`))
       .then((res) => res.json())
       .then((data) => {
         console.log("Fetched collections:", data);
@@ -132,7 +133,7 @@ const CreatedCollectRightUI = () => {
                             title="Hold me"
                           >
                             <img
-                              src="/public/createdui/holdme.svg"
+                              src="/createdui/holdme.svg"
                               alt="drag handle"
                               className="w-full h-full pointer-events-none"
                             />

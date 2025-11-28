@@ -3,19 +3,19 @@ import Stack from "./StackImg";
 const images = [
   {
     id: 1,
-    img: "/public/createdui/pinkpanther.jpg",
+    img: "/createdui/pinkpanther.jpg",
   },
 ];
 const images2 = [
   {
     id: 2,
-    img: "/public/createdui/hmm.jpg",
+    img: "/createdui/hmm.jpg",
   },
 ];
 const images3 = [
   {
     id: 3,
-    img: "/public/createdui/meow.jpg",
+    img: "/createdui/meow.jpg",
   },
 ];
 const DefaultImgCreatedUI = () => {

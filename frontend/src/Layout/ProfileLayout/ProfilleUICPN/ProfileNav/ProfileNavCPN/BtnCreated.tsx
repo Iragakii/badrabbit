@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams, useLocation } from "react-router-dom";
 import { useAuth } from "../../../../../../Auth/AuthContext";
+import { getApiUrl } from "../../../../../../config/api";
 
 const BtnCreated = () => {
   const { walletaddress } = useParams();
@@ -22,7 +23,7 @@ const BtnCreated = () => {
 
     // Fetch profile data
     if (walletaddress) {
-      fetch(`http://localhost:8081/api/user/${walletaddress}`, {
+      fetch(getApiUrl(`api/user/${walletaddress}`), {
         credentials: "include",
       })
         .then((res) => {

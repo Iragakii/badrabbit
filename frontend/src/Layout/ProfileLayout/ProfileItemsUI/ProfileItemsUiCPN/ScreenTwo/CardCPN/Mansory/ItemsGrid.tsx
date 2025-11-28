@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import Masonry from "react-masonry-css";
 import RowCardOne from "./RowCardOne";
 import { useAuth } from "../../../../../../../../Auth/AuthContext";
+import { getApiUrl } from "../../../../../../../../config/api";
 
 type ItemType = {
   id?: string | number;
@@ -35,7 +36,7 @@ const ItemsGrid = ({ walletaddress }: ItemsGridProps) => {
       return;
     }
     setLoading(true);
-    fetch(`http://localhost:8081/api/items/owner/${walletaddress}`)
+    fetch(getApiUrl(`api/items/owner/${walletaddress}`))
       .then(res => res.ok ? res.json() : [])
       .then((data: ItemType[]) => {
         console.log("ItemsGrid fetched items:", data.length, data);
@@ -63,7 +64,7 @@ const ItemsGrid = ({ walletaddress }: ItemsGridProps) => {
     if (!isLoggedIn || !address || address.toLowerCase() !== walletaddress?.toLowerCase()) {
       return;
     }
-    fetch(`http://localhost:8081/api/collections/owner/${walletaddress}`)
+    fetch(getApiUrl(`api/collections/owner/${walletaddress}`))
       .then(res => res.ok ? res.json() : [])
       .then((data: any[]) => {
         if (Array.isArray(data)) {
@@ -80,7 +81,7 @@ const ItemsGrid = ({ walletaddress }: ItemsGridProps) => {
     const interval = setInterval(() => {
       // Silent refresh without showing loading state
       if (isLoggedIn && address && address.toLowerCase() === walletaddress?.toLowerCase()) {
-        fetch(`http://localhost:8081/api/items/owner/${walletaddress}`)
+        fetch(getApiUrl(`api/items/owner/${walletaddress}`))
           .then(res => res.ok ? res.json() : [])
           .then((data: ItemType[]) => {
             if (Array.isArray(data)) {

@@ -12,7 +12,7 @@ const CreatedCollectHeaderFilter = () => {
           <div className="flex p-2 m-auto items-center gap-1 text-gray-400  cursor-pointer hover:text-white">
             <button className=" text-[16px] uppercase">Floor Price</button>{" "}
             <img
-              src="/public/createdui/double-arrow.svg"
+              src="/createdui/double-arrow.svg"
               className="w-3 h-3"
               alt=""
             />
@@ -20,7 +20,7 @@ const CreatedCollectHeaderFilter = () => {
              <div className="flex p-2 m-auto items-center gap-1 text-gray-400  cursor-pointer hover:text-white">
             <button className=" text-[16px] uppercase">Top Offer</button>{" "}
             <img
-              src="/public/createdui/arrow-up.svg"
+              src="/createdui/arrow-up.svg"
               className="w-3 h-3"
               alt=""
             />
@@ -28,7 +28,7 @@ const CreatedCollectHeaderFilter = () => {
              <div className="flex p-2 m-auto items-center gap-1 text-gray-400  cursor-pointer hover:text-white">
             <button className=" text-[16px] uppercase">Vol</button>{" "}
             <img
-              src="/public/createdui/double-arrow.svg"
+              src="/createdui/double-arrow.svg"
               className="w-3 h-3"
               alt=""
             />
@@ -36,7 +36,7 @@ const CreatedCollectHeaderFilter = () => {
              <div className="flex p-2 m-auto items-center gap-1 text-gray-400  cursor-pointer hover:text-white">
             <button className=" text-[16px] uppercase">Sales</button>{" "}
             <img
-              src="/public/createdui/double-arrow.svg"
+              src="/createdui/double-arrow.svg"
               className="w-3 h-3"
               alt=""
             />

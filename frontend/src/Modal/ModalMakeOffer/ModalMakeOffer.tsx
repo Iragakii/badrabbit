@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useAuth } from "../../../Auth/AuthContext";
+import { getApiUrl } from "../../../config/api";
 
 interface ModalMakeOfferProps {
   isOpen: boolean;
@@ -30,7 +31,7 @@ const ModalMakeOffer = ({ isOpen, onClose, item, onOfferCreated }: ModalMakeOffe
   // Fetch wallet balance
   useEffect(() => {
     if (isOpen && address) {
-      fetch(`http://localhost:8081/api/wallet/${address}/weth-balance`)
+      fetch(getApiUrl(`api/wallet/${address}/weth-balance`))
         .then((res) => res.json())
         .then((data: { balance: number }) => {
           setWalletBalance(data.balance || 0);
@@ -107,7 +108,7 @@ const ModalMakeOffer = ({ isOpen, onClose, item, onOfferCreated }: ModalMakeOffe
     setLoading(true);
     try {
       const itemId = item.id || item._id;
-      const response = await fetch("http://localhost:8081/api/offers", {
+      const response = await fetch(getApiUrl("api/offers"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

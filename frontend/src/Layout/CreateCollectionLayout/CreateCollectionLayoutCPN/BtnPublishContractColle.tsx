@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { getApiUrl } from '../../../../config/api';
 
 const BtnPublishContractColle = ({ selectedFile, collectionData }: {
   selectedFile: File | null;
@@ -16,7 +17,7 @@ const BtnPublishContractColle = ({ selectedFile, collectionData }: {
     const formData = new FormData();
     formData.append('file', file);
 
-    const uploadResponse = await fetch('http://localhost:8081/api/collections/upload-image', {
+    const uploadResponse = await fetch(getApiUrl('api/collections/upload-image'), {
       method: 'POST',
       body: formData,
     });
@@ -45,7 +46,7 @@ const BtnPublishContractColle = ({ selectedFile, collectionData }: {
       const ipfsUrl = await uploadToIPFS(selectedFile);
 
       // Send to backend
-      const response = await fetch('http://localhost:8081/api/collections', {
+      const response = await fetch(getApiUrl('api/collections'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

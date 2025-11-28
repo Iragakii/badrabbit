@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { getApiUrl } from "../../../../../../config/api";
 
 const useUserProfile = (walletaddress: string | undefined) => {
   const [loading, setLoading] = useState(true);
@@ -16,7 +17,7 @@ const useUserProfile = (walletaddress: string | undefined) => {
     const fetchProfile = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`http://localhost:8081/api/user/${walletaddress}`, { withCredentials: true });
+        const response = await axios.get(getApiUrl(`api/user/${walletaddress}`), { withCredentials: true });
         setProfileData(response.data);
         setError(null);
       } catch (err: any) {

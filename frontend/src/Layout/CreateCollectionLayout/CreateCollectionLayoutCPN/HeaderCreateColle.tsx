@@ -13,7 +13,7 @@ const HeaderCreateColle = () => {
                 className="bg-[#151516] border-[#2C2C2C] border-1 rounded-[7px] p-2 cursor-pointer hover:bg-[#151516]/30"
                 onClick={() => navigate(-1)}
               >
-                <img src="/public/createdui/back-arrow.svg" alt="" className="w-3 h-3" />
+                <img src="/createdui/back-arrow.svg" alt="" className="w-3 h-3" />
               </button>
             </div>
             <div className="text-gray-400">Create Collection</div>

@@ -1,4 +1,5 @@
 import { useAuth } from "../../../../../../Auth/AuthContext";
+import { getApiUrl } from "../../../../../../config/api";
 
 
 
@@ -12,7 +13,7 @@ const ButtonConnectX = () => {
       return;
     }
     // Redirect to backend login endpoint which sends user to X
-    window.location.href = `http://localhost:8081/api/x/login?walletAddress=${encodeURIComponent(address)}`;
+    window.location.href = getApiUrl(`api/x/login?walletAddress=${encodeURIComponent(address)}`);
   };
 
   return (

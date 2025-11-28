@@ -1,4 +1,5 @@
 import { useAuth } from "../../../../../../Auth/AuthContext";
+import { getApiUrl } from "../../../../../../config/api";
 
 
 
@@ -14,7 +15,7 @@ const ButtonDisconectX = () => {
 
     try {
       // Call backend to disconnect X account
-      const response = await fetch(`http://localhost:8081/api/x/disconnect?walletAddress=${encodeURIComponent(address)}`, {
+      const response = await fetch(getApiUrl(`api/x/disconnect?walletAddress=${encodeURIComponent(address)}`), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -5,7 +5,7 @@ const CardCreateCollecNFT = () => {
     <>
       <div className="flex flex-col space-y-4 font-sans group hover:bg-[#B6771D] p-7 rounded-[6px] cursor-pointer transition-all duration-300  ">
         <img
-          src="/public/createdui/addcollection.jpg"
+          src="/createdui/addcollection.jpg"
           alt=""
           className="w-30 h-30 rounded-[10px]"
         />
@@ -21,7 +21,7 @@ const CardCreateCollecNFT = () => {
         </span>
         <div className="flex items-center gap-2">
           <img
-            src="/public/settingprofile/dev-tag.svg"
+            src="/settingprofile/dev-tag.svg"
             alt=""
             className="w-4 h-4"
           />
@@ -29,7 +29,7 @@ const CardCreateCollecNFT = () => {
         </div>
         <div className="flex items-center gap-2">
           <img
-            src="/public/settingprofile/dev-tag.svg"
+            src="/settingprofile/dev-tag.svg"
             alt=""
             className="w-4 h-4"
           />
@@ -37,7 +37,7 @@ const CardCreateCollecNFT = () => {
         </div>
         <div className="flex items-center gap-2">
           <img
-            src="/public/settingprofile/dev-tag.svg"
+            src="/settingprofile/dev-tag.svg"
             alt=""
             className="w-4 h-4"
           />
@@ -48,7 +48,7 @@ const CardCreateCollecNFT = () => {
         </div>
         <div className="flex items-center gap-2">
           <img
-            src="/public/settingprofile/dev-tag.svg"
+            src="/settingprofile/dev-tag.svg"
             alt=""
             className="w-4 h-4"
           />
@@ -56,7 +56,7 @@ const CardCreateCollecNFT = () => {
         </div>
         <div className="flex items-center gap-2">
           <img
-            src="/public/settingprofile/dev-tag.svg"
+            src="/settingprofile/dev-tag.svg"
             alt=""
             className="w-4 h-4"
           />

@@ -4,6 +4,7 @@ import DefaultImgCreatedUI from "./DefaultImgCreatedUI";
 import TitleaDesCreatedUI from "./TitleaDesCreatedUI";
 import CreateColle from "./CreateColle";
 import CreatedCollectionUI from "./CreatedCollectionUI";
+import { getApiUrl } from "../../../../config/api";
 
 interface Collection {
   _id: string;
@@ -22,7 +23,7 @@ export default function CreatedCollections() {
 
   useEffect(() => {
     if (!walletaddress) return;
-    fetch(`http://localhost:8081/api/collections/owner/${walletaddress}`)
+    fetch(getApiUrl(`api/collections/owner/${walletaddress}`))
       .then((res) => res.json())
       .then((data) => {
         setCollections(data);

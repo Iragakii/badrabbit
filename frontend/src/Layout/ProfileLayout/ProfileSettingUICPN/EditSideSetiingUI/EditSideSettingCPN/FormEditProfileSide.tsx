@@ -109,7 +109,7 @@ const FormEditProfileSide: React.FC<FormProps> = ({
           </label>
           <div className="flex items-center justify-between  border border-gray-700 rounded-md px-3 py-2">
             <div className="flex items-center gap-2">
-              <img src="/public/settingprofile/x.jpg" alt="" className="w-6 h-6  border border-gray-700 rounded-[7px]"/>
+              <img src="/settingprofile/x.jpg" alt="" className="w-6 h-6  border border-gray-700 rounded-[7px]"/>
               <span>{twitter ? `@${twitter}` : "Connect X"}</span>
             </div>
              {twitter ? <ButtonDisconectX /> : <ButtonConnectX />}
