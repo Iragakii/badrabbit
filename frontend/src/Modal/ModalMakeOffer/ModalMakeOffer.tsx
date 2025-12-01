@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useAuth } from "../../../Auth/AuthContext";
 import { getApiUrl } from "../../config/api";
-import { useNotification } from "../../../components/Notification/NotificationContext";
+import { useNotification } from "../../components/Notification/NotificationContext";
 
 interface ModalMakeOfferProps {
   isOpen: boolean;

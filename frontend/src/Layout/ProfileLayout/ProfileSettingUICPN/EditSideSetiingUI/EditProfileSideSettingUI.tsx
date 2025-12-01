@@ -3,9 +3,8 @@ import  { useState, useEffect } from 'react';
 import HeaderEditProfileSide from "./EditSideSettingCPN/HeaderEditProfileSide"
 import FormEditProfileSide from "./EditSideSettingCPN/FormEditProfileSide"
 import FormFooterSaveSlide from "./EditSideSettingCPN/FormFooterSaveSlide"
-import { useAuth } from '../../../../../Auth/AuthContext';
-import { getApiUrl } from '../../../../../config/api';
-import { useNotification } from '../../../../../components/Notification/NotificationContext';
+import { useAuth } from '../../../../../Auth/AuthContext';import { useNotification } from '../../../../components/Notification/NotificationContext';
+import { getApiUrl } from '../../../../config/api';
 
 const EditProfileSideSettingUI = () => {
   const { username, bio, website, updateProfile, address, token } = useAuth();

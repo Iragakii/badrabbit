@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { useAuth } from '../../../../../../Auth/AuthContext';
 import UserAvaWhenLog from '../../../../../components/Header/HeaderCPN/WhenUserLoginCPN/UserAvaWhenLog';
 import { getApiUrl } from '../../../../../config/api';
-import { useNotification } from '../../../../../../components/Notification/NotificationContext';
+import { useNotification } from '../../../../../components/Notification/NotificationContext';
 
 
 const HeaderEditProfileSide = () => {

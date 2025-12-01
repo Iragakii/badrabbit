@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faWallet, faEnvelope } from "@fortawesome/free-solid-svg-icons"
 import { useAuth } from '../../../Auth/AuthContext';
 import { getApiUrl } from '../../config/api';
-import { useNotification } from '../../../components/Notification/NotificationContext';
+import { useNotification } from '../../components/Notification/NotificationContext';
 
 
 interface ModalLoginProps {

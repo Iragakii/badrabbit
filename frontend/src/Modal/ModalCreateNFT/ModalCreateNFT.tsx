@@ -4,7 +4,7 @@ import { useAuth } from "../../../Auth/AuthContext";
 import { useParams, useNavigate } from "react-router-dom";
 import ButtonUploadImg from "./ModalCreateNFTCPN/ButtonUploadImg";
 import { getApiUrl } from "../../config/api";
-import { useNotification } from "../../../components/Notification/NotificationContext";
+import { useNotification } from "../../components/Notification/NotificationContext";
 
 interface ModalCreateNFTProps {
   onClose: () => void;
@@ -249,21 +249,28 @@ const ModalCreateNFT = ({ onClose, selectedCollection }: ModalCreateNFTProps) =>
                   <label className="text-white font-semibold text-[14px]">
                     Choose Collection <span className="text-red-500">*</span>
                   </label>
-                  <select
-                    className="bg-[#141415] p-3 rounded-[8px] border border-[#181C14] text-white"
-                    value={formData.collectionId}
-                    onChange={(e) => handleInputChange("collectionId", e.target.value)}
-                  >
-                    <option value="">Select a collection</option>
-                    {collections.map((col) => {
-                      const colId = col.id || col._id || "";
-                      return (
-                        <option key={colId} value={colId}>
-                          {col.name}
-                        </option>
-                      );
-                    })}
-                  </select>
+                  <div className="relative">
+                    <select
+                      className="bg-[#141415] p-3 pl-4 pr-10 rounded-[8px] border border-[#181C14] text-white appearance-none cursor-pointer w-full focus:outline-none focus:border-[#1F7D53]"
+                      value={formData.collectionId}
+                      onChange={(e) => handleInputChange("collectionId", e.target.value)}
+                    >
+                      <option value="">Select a collection</option>
+                      {collections.map((col) => {
+                        const colId = col.id || col._id || "";
+                        return (
+                          <option key={colId} value={colId}>
+                            {col.name}
+                          </option>
+                        );
+                      })}
+                    </select>
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                      <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Supply */}
@@ -276,7 +283,7 @@ const ModalCreateNFT = ({ onClose, selectedCollection }: ModalCreateNFTProps) =>
                       type="number"
                       placeholder="Enter supply (e.g., 1, 100)"
                       min="1"
-                      className="bg-[#141415] p-3 pr-20 rounded-[8px] border border-[#181C14] text-white placeholder-gray-500 w-full"
+                      className="bg-[#141415] p-3 pr-20 rounded-[8px] border border-[#181C14] text-white placeholder-gray-500 w-full [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                       value={formData.supply}
                       onChange={(e) => handleInputChange("supply", e.target.value)}
                     />
@@ -291,7 +298,7 @@ const ModalCreateNFT = ({ onClose, selectedCollection }: ModalCreateNFTProps) =>
                         title="Increase"
                       >
                         <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                          <path fillRule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clipRule="evenodd" />
                         </svg>
                       </button>
                       <button
@@ -307,7 +314,7 @@ const ModalCreateNFT = ({ onClose, selectedCollection }: ModalCreateNFTProps) =>
                         title="Decrease"
                       >
                         <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clipRule="evenodd" />
+                          <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                         </svg>
                       </button>
                     </div>
