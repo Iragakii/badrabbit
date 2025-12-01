@@ -8,6 +8,7 @@ com\example\backend\Controller\ItemController.class
 com\example\backend\model\TwitterModel.class
 com\example\backend\config\JwtConfig.class
 com\example\backend\Controller\XAuthController.class
+com\example\backend\exception\GlobalExceptionHandler.class
 com\example\backend\config\ItemDataLoader.class
 com\example\backend\repository\UserRepository.class
 com\example\backend\Controller\PriceController$1.class

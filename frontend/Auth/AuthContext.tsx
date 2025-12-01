@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import axios from 'axios';
-import { API_BASE_URL } from '../src/config/api';
+import { API_BASE_URL, normalizeImageUrl } from '../src/config/api';
+
 
 // Configure axios defaults
 axios.defaults.baseURL = API_BASE_URL;
@@ -97,7 +98,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const clearError = () => setError(null);
 
   const updateAvatar = (url: string) => {
-    setAvatarUrl(url);
+    setAvatarUrl(normalizeImageUrl(url));
   };
 
   const updateProfile = async (username: string, bio: string, website: string) => {
@@ -156,7 +157,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const { address: walletAddress, avatarUrl, username, bio, website, twitter } = res.data;
 
       setAddress(walletAddress);
-      setAvatarUrl(avatarUrl);
+      setAvatarUrl(normalizeImageUrl(avatarUrl));
       setUsername(username);
       setBio(bio);
       setWebsite(website);
@@ -211,7 +212,7 @@ useEffect(() => {
 
         setIsLoggedIn(true);
         setAddress(walletAddress);
-        setAvatarUrl(avatarUrl);
+        setAvatarUrl(normalizeImageUrl(avatarUrl));
         setUsername(username);
         setBio(bio);
         setWebsite(website);

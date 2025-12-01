@@ -1,6 +1,7 @@
 D:\destop\main\VS\nft\backend\src\main\java\com\example\backend\repository\PriceHistoryRepository.java
 D:\destop\main\VS\nft\backend\src\main\java\com\example\backend\Controller\WalletController.java
 D:\destop\main\VS\nft\backend\src\main\java\com\example\backend\Controller\XAuthController.java
+D:\destop\main\VS\nft\backend\src\main\java\com\example\backend\exception\GlobalExceptionHandler.java
 D:\destop\main\VS\nft\backend\src\main\java\com\example\backend\Controller\ProfileController.java
 D:\destop\main\VS\nft\backend\src\main\java\com\example\backend\Controller\ItemController.java
 D:\destop\main\VS\nft\backend\src\main\java\com\example\backend\config\JwtConfig.java

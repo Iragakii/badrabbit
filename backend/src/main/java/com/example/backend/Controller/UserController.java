@@ -3,6 +3,7 @@ package com.example.backend.Controller;
 import com.example.backend.model.User;
 import com.example.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +19,9 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
+    @Value("${backend.url:http://localhost:8081}")
+    private String backendUrl;
+
     @PostMapping("/avatar")
     public ResponseEntity<?> uploadAvatar(
             @RequestParam("file") MultipartFile file,
@@ -32,7 +36,7 @@ public class UserController {
             Path filePath = Paths.get(uploadDir + fileName);
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-            String fileUrl = "http://localhost:8081/" + uploadDir + fileName;
+            String fileUrl = backendUrl + "/" + uploadDir + fileName;
 
             // Update user avatar in MongoDB
             User user = userRepository.findByWalletAddress(address)

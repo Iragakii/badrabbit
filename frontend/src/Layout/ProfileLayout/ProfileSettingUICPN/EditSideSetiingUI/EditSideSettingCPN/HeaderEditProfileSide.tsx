@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { useAuth } from '../../../../../../Auth/AuthContext';
 import UserAvaWhenLog from '../../../../../components/Header/HeaderCPN/WhenUserLoginCPN/UserAvaWhenLog';
+import { getApiUrl } from '../../../../../config/api';
 
 
 const HeaderEditProfileSide = () => {
@@ -20,7 +21,7 @@ const HeaderEditProfileSide = () => {
     formData.append('address', address);
 
     try {
-      const response = await fetch('/api/user/avatar', {
+      const response = await fetch(getApiUrl('api/user/avatar'), {
         method: 'POST',
         body: formData,
       });
