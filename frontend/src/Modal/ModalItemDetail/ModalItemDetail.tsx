@@ -573,7 +573,7 @@ const ModalItemDetail = ({ onClose }: ModalItemDetailProps) => {
                         </svg>
                       </button>
                       {expandedSections.about && (
-                        <div className="mt-4 text-gray-400 text-center">
+                        <div className="mt-4 text-white text-center">
                           {item.description || "No description available"}
                         </div>
                       )}
