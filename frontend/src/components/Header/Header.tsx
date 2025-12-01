@@ -17,19 +17,17 @@ const Header = () => {
     <>
      <div>
         <header className=" bg-[#0C0C0C] text-white py-2 z-50 border-b border-[#181C14]">
-            <div className=" flex container mx-auto justify-between">
-                <div className="rounded-md border border-[#181C14] pl-3 w-80 flex items-center cursor-pointer">
+            <div className="flex w-full justify-between items-center px-4 pl-15">
+                <div className="rounded-md border border-[#181C14] pl-3 w-80 flex items-center cursor-pointer flex-shrink-0">
                     <FontAwesomeIcon icon={faMagnifyingGlass} style={{color: "#ffffff",}} />
                     <SearchInput></SearchInput>
                 </div>
-                <div className="flex items-center">
+                <div className="flex items-center gap-2 flex-shrink-0">
                   {isLoggedIn ? (
                     <WhenUserLogContainer />
                   ) : (
                     <>
-                      <button className="border-r border-r-[#181C14] pr-1 mr-2 ">
-                        <ConnectWallet />
-                      </button>
+                      <ConnectWallet />
                       <UserIconNotLog />
                     </>
                   )}

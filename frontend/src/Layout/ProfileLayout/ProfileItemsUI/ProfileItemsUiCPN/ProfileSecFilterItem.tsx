@@ -27,9 +27,9 @@ const ProfileSecFilterItem = () => {
   const [collections, setCollections] = useState<CollectionWithCount[]>([]);
   const collectionId = searchParams.get("collection");
 
-  // Fetch collections and items
+  // Fetch collections and items for any wallet address (not just logged-in user)
   useEffect(() => {
-    if (!isLoggedIn || !address || !walletaddress || address.toLowerCase() !== walletaddress.toLowerCase()) {
+    if (!walletaddress) {
       setItemCount(0);
       setCollections([]);
       return;
@@ -88,8 +88,12 @@ const ProfileSecFilterItem = () => {
     };
 
     fetchData();
-    // Refresh every 5 seconds
-    const interval = setInterval(fetchData, 5000);
+    // Refresh every 5 seconds (only if viewing own profile)
+    const interval = setInterval(() => {
+      if (isLoggedIn && address && address.toLowerCase() === walletaddress.toLowerCase()) {
+        fetchData();
+      }
+    }, 5000);
     return () => clearInterval(interval);
   }, [walletaddress, address, isLoggedIn, collectionId]);
 

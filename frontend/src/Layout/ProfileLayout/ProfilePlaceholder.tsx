@@ -7,11 +7,14 @@ import SuperHeader from './ProfilleUICPN/SuperHeader';
  */
 const ProfilePlaceholder = () => {
   return (
-    <div className="min-h-screen">
-      <div className="flex">
-        <NavBar />
-        <div>
+    <div className="min-h-screen flex">
+      <NavBar />
+      <div className="flex-1 flex flex-col ml-[55px]">
+        <div className="flex-shrink-0">
           <SuperHeader />
+        </div>
+        <div className="flex-1">
+          {/* Content area */}
         </div>
         <Footer />
       </div>

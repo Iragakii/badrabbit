@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import BTNCreatedCollectNavBar from "./BTNCreatedCollectNavBar";
 import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
 import BTNCreatedCollectNavBarDate from "./BTNCreatedCollectNavBar";
@@ -38,14 +38,16 @@ const convertIpfsToHttp = (ipfsUrl: string): string => {
 
 const CreatedCollectRightUI = () => {
   const { walletaddress } = useParams();
+  const location = useLocation();
   const [collections, setCollections] = useState<Collection[]>([]);
   const [loading, setLoading] = useState(true);
   const [isChoiceModalOpen, setIsChoiceModalOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null);
 
-  useEffect(() => {
+  const fetchCollections = () => {
     if (!walletaddress) return;
+    setLoading(true);
     fetch(getApiUrl(`api/collections/owner/${walletaddress}`))
       .then((res) => res.json())
       .then((data) => {
@@ -57,7 +59,11 @@ const CreatedCollectRightUI = () => {
         console.error("Error fetching collections:", err);
         setLoading(false);
       });
-  }, [walletaddress]);
+  };
+
+  useEffect(() => {
+    fetchCollections();
+  }, [walletaddress, location.pathname]); // Refresh when walletaddress or pathname changes
 
   const onDragEnd = (result: DropResult) => {
     console.log("Drag ended", result);

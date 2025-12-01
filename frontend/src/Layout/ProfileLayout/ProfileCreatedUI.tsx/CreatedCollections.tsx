@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import DefaultImgCreatedUI from "./DefaultImgCreatedUI";
 import TitleaDesCreatedUI from "./TitleaDesCreatedUI";
 import CreateColle from "./CreateColle";
 import CreatedCollectionUI from "./CreatedCollectionUI";
 import { getApiUrl } from "../../../config/api";
+import { useAuth } from "../../../../Auth/AuthContext";
 
 
 interface Collection {
@@ -19,11 +20,17 @@ interface Collection {
 
 export default function CreatedCollections() {
   const { walletaddress } = useParams();
+  const location = useLocation();
+  const { address } = useAuth();
   const [collections, setCollections] = useState<Collection[]>([]);
   const [loading, setLoading] = useState(true);
+  
+  // Check if viewing own profile
+  const isOwnProfile = address && walletaddress && address.toLowerCase() === walletaddress.toLowerCase();
 
   useEffect(() => {
     if (!walletaddress) return;
+    setLoading(true);
     fetch(getApiUrl(`api/collections/owner/${walletaddress}`))
       .then((res) => res.json())
       .then((data) => {
@@ -34,7 +41,7 @@ export default function CreatedCollections() {
         console.error("Error fetching collections:", err);
         setLoading(false);
       });
-  }, [walletaddress]);
+  }, [walletaddress, location.pathname]); // Refresh when walletaddress or pathname changes
 
   if (loading) return <div className="text-white">Loading...</div>;
 
@@ -45,7 +52,7 @@ export default function CreatedCollections() {
           
           <DefaultImgCreatedUI></DefaultImgCreatedUI>
           <TitleaDesCreatedUI></TitleaDesCreatedUI>
-          <CreateColle></CreateColle>
+          {isOwnProfile && <CreateColle></CreateColle>}
         </div>
       ) : (
         <div className="">

@@ -22,29 +22,31 @@ const ProfileUI = () => {
     return rest ? `/${rest}` : '';
   }, [location.pathname]);
 
-  useEffect(() => {
-    if (isLoading || !isLoggedIn || !address) return;
+  // Removed auto-redirect - allow viewing other users' profiles
+  // useEffect(() => {
+  //   if (isLoading || !isLoggedIn || !address) return;
 
-    if (!normalizedUrlWallet || normalizedUrlWallet !== normalizedUserWallet) {
-      navigate(`/${address}${trailingSuffix}`, { replace: true });
-    }
-  }, [
-    isLoading,
-    isLoggedIn,
-    address,
-    normalizedUrlWallet,
-    normalizedUserWallet,
-    navigate,
-    trailingSuffix,
-  ]);
+  //   if (!normalizedUrlWallet || normalizedUrlWallet !== normalizedUserWallet) {
+  //     navigate(`/${address}${trailingSuffix}`, { replace: true });
+  //   }
+  // }, [
+  //   isLoading,
+  //   isLoggedIn,
+  //   address,
+  //   normalizedUrlWallet,
+  //   normalizedUserWallet,
+  //   navigate,
+  //   trailingSuffix,
+  // ]);
 
-  useEffect(() => {
-    if (isLoading) return;
+  // Allow viewing profiles without being logged in
+  // useEffect(() => {
+  //   if (isLoading) return;
 
-    if (!isLoggedIn && walletaddress) {
-      navigate('/profile', { replace: true });
-    }
-  }, [isLoading, isLoggedIn, walletaddress, navigate]);
+  //   if (!isLoggedIn && walletaddress) {
+  //     navigate('/profile', { replace: true });
+  //   }
+  // }, [isLoading, isLoggedIn, walletaddress, navigate]);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -59,9 +61,10 @@ const ProfileUI = () => {
 
   const isOwnProfile = isLoggedIn && normalizedUserWallet === normalizedUrlWallet;
 
-  if (!isOwnProfile) {
-    return <ProfilePlaceholder />;
-  }
+  // Allow viewing other users' profiles - show profile UI for any valid wallet address
+  // if (!isOwnProfile) {
+  //   return <ProfilePlaceholder />;
+  // }
 
   return (
     <div className="min-h-screen flex">

@@ -1,18 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../../../Auth/AuthContext';
 import FooterCreateColle from "./CreateCollectionLayoutCPN/FooterCreateColle"
 import HeaderCreateColle from "./CreateCollectionLayoutCPN/HeaderCreateColle"
 import MainCreateCollec from "./CreateCollectionLayoutCPN/MainCreateCollec"
 
 
 const CreateCollectionLayout = () => {
+  const { address } = useAuth();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [collectionData, setCollectionData] = useState({
     name: '',
     description: '',
     chain: 'Ethereum',
     type: 'ERC721',
-    ownerWallet: '0x4eb93d214e037926165b9d689818e609d4efe6c4', // Mock wallet address for testing
+    ownerWallet: address || '',
   });
+
+  // Update ownerWallet when address changes
+  useEffect(() => {
+    if (address) {
+      setCollectionData(prev => ({ ...prev, ownerWallet: address }));
+    }
+  }, [address]);
 
   return (
     <>

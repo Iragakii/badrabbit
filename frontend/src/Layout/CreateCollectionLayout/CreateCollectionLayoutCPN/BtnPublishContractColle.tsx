@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getApiUrl } from '../../../config/api';
 import { useNotification } from '../../../components/Notification/NotificationContext';
+import { useAuth } from '../../../../Auth/AuthContext';
 
 const BtnPublishContractColle = ({ selectedFile, collectionData }: {
   selectedFile: File | null;
@@ -13,6 +15,8 @@ const BtnPublishContractColle = ({ selectedFile, collectionData }: {
   }
 }) => {
   const { showSuccess, showError, showWarning } = useNotification();
+  const { address } = useAuth();
+  const navigate = useNavigate();
   const [uploading, setUploading] = useState(false);
 
   const uploadToIPFS = async (file: File) => {
@@ -48,20 +52,35 @@ const BtnPublishContractColle = ({ selectedFile, collectionData }: {
       const ipfsUrl = await uploadToIPFS(selectedFile);
 
       // Send to backend
+      const requestBody = {
+        ...collectionData,
+        image: ipfsUrl,
+      };
+      
+      console.log('Sending collection data:', requestBody);
+      
       const response = await fetch(getApiUrl('api/collections'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...collectionData,
-          image: ipfsUrl,
-        }),
+        body: JSON.stringify(requestBody),
       });
+
+      const responseData = await response.json();
+      console.log('Response status:', response.status);
+      console.log('Response data:', responseData);
 
       if (response.ok) {
         showSuccess('Collection created successfully!');
-        // Redirect or reset form
+        // Navigate to created collections page to see the new collection
+        if (address) {
+          navigate(`/${address}/created`, { replace: false });
+        } else if (collectionData.ownerWallet) {
+          navigate(`/${collectionData.ownerWallet}/created`, { replace: false });
+        }
       } else {
-        showError('Failed to create collection');
+        const errorMessage = responseData?.error || `Failed to create collection: ${response.status} ${response.statusText}`;
+        console.error('Collection creation failed:', errorMessage);
+        showError(errorMessage);
       }
     } catch (error) {
       console.error('Error:', error);

@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.nio.file.*;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user")
@@ -78,6 +79,25 @@ public class UserController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).body("Failed to update profile");
+        }
+    }
+
+    @GetMapping("/{address}")
+    public ResponseEntity<?> getUserByAddress(@PathVariable String address) {
+        try {
+            Optional<User> userOpt = userRepository.findByWalletAddress(address.toLowerCase());
+            
+            User user = userOpt.orElseGet(() -> {
+                // Return a user object with default values if not found
+                User defaultUser = new User();
+                defaultUser.setWalletAddress(address);
+                return defaultUser;
+            });
+            
+            return ResponseEntity.ok(user);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(Map.of("error", "Failed to fetch user profile"));
         }
     }
 

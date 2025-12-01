@@ -23,15 +23,49 @@ public class CollectionController {
 
     @PostMapping
     public ResponseEntity<?> createCollection(@RequestBody CollectionModel collection) {
-        System.out.println("Received collection: " + collection);
-        System.out.println("Name: " + collection.getName());
-        System.out.println("OwnerWallet: " + collection.getOwnerWallet());
-        System.out.println("Image: " + collection.getImage());
-        collection.setStatus("draft");
-        collection.setCreatedAt(new Date());
-        collection.setUpdatedAt(new Date());
-        CollectionModel saved = collectionRepository.save(collection);
-        return ResponseEntity.ok(saved);
+        try {
+            System.out.println("Received collection: " + collection);
+            System.out.println("Name: " + collection.getName());
+            System.out.println("OwnerWallet: " + collection.getOwnerWallet());
+            System.out.println("Image: " + collection.getImage());
+            
+            // Validate required fields
+            if (collection.getName() == null || collection.getName().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of("error", "Collection name is required"));
+            }
+            
+            if (collection.getOwnerWallet() == null || collection.getOwnerWallet().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of("error", "Owner wallet address is required"));
+            }
+            
+            // Normalize owner wallet to lowercase for consistency
+            collection.setOwnerWallet(collection.getOwnerWallet().toLowerCase());
+            
+            // Set default values
+            collection.setStatus("draft");
+            collection.setCreatedAt(new Date());
+            collection.setUpdatedAt(new Date());
+            
+            // Save to MongoDB
+            CollectionModel saved = collectionRepository.save(collection);
+            System.out.println("Collection saved successfully with ID: " + saved.getId());
+            
+            // Verify the save by checking if it exists in the database
+            if (saved.getId() != null) {
+                java.util.Optional<CollectionModel> verify = collectionRepository.findById(saved.getId());
+                if (verify.isPresent()) {
+                    System.out.println("Collection verified in database: " + verify.get().getName());
+                } else {
+                    System.err.println("WARNING: Collection was not found in database after save!");
+                }
+            }
+            
+            return ResponseEntity.ok(saved);
+        } catch (Exception e) {
+            System.err.println("Error creating collection: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(Map.of("error", "Failed to create collection: " + e.getMessage()));
+        }
     }
 
     @PostMapping("/upload-image")

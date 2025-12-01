@@ -9,8 +9,8 @@ const ProfileItemsUI = () => {
   const { isLoggedIn, address } = useAuth();
   const { walletaddress } = useParams();
 
-  // Only show the items grid for the logged-in user whose address matches
-  if (!isLoggedIn || !address || address.toLowerCase() !== walletaddress?.toLowerCase()) {
+  // Show items for the wallet address in URL (can be any user, not just logged-in user)
+  if (!walletaddress) {
     return null;
   }
   return (

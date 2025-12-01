@@ -13,7 +13,7 @@ const WhenUserLogContainer = () => {
 
   return (
     <>
-      <div className="relative flex items-center gap-7 mt-1">
+      <div className="relative flex items-center gap-7">
         <div className='border-l-1 border-r-1 border-[#181C14] px-3 py-[8px] rounded-l-none rounded-r-none hover:bg-[#ffffff]/8 rounded-md cursor-pointer'>
           <TotalETHvWETHinWalletCPN></TotalETHvWETHinWalletCPN>
         </div>

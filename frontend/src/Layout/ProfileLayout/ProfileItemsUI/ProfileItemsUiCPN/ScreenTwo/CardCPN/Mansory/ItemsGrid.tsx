@@ -30,7 +30,7 @@ const ItemsGrid = ({ walletaddress }: ItemsGridProps) => {
   const collectionId = searchParams.get("collection");
 
   const fetchItems = () => {
-    if (!isLoggedIn || !address || address.toLowerCase() !== walletaddress?.toLowerCase()) {
+    if (!walletaddress) {
       setItems([]);
       setAllItems([]);
       setLoading(false);
@@ -60,9 +60,9 @@ const ItemsGrid = ({ walletaddress }: ItemsGridProps) => {
       });
   };
 
-  // Fetch collections once
+  // Fetch collections once for any wallet address
   useEffect(() => {
-    if (!isLoggedIn || !address || address.toLowerCase() !== walletaddress?.toLowerCase()) {
+    if (!walletaddress) {
       return;
     }
     fetch(getApiUrl(`api/collections/owner/${walletaddress}`))
@@ -154,7 +154,7 @@ const ItemsGrid = ({ walletaddress }: ItemsGridProps) => {
   }, [collectionId, allItems, collections]); 
 
   if (loading) return <div>Loading...</div>;
-  if (!isLoggedIn || !address || address.toLowerCase() !== walletaddress?.toLowerCase()) return null;
+  if (!walletaddress) return null;
 
   // Dynamically adjust columns based on item count to prevent distortion
   const getBreakpointColumns = () => {
