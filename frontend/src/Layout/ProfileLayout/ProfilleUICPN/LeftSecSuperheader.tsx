@@ -61,6 +61,10 @@ const LeftSecSuperheader = () => {
       src={displayAvatar || "/defaultava.png"}
       alt="Token Avatar"
       className="w-14 h-14 rounded-full object-cover "
+      onError={(e) => {
+        // Fallback to default if image fails to load
+        e.currentTarget.src = "/defaultava.png";
+      }}
     />
         </button>
          </div>

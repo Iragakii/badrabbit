@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
-import { getApiUrl } from "../../config/api";
+import { getApiUrl, normalizeImageUrl } from "../../config/api";
 
 interface User {
   id?: string;
@@ -219,9 +219,13 @@ const ModalSearch = ({ isOpen, onClose, initialQuery = "" }: ModalSearchProps) =
                         <div className="w-10 h-10 rounded-full bg-[#1F7D53] flex items-center justify-center overflow-hidden">
                           {user.profileImageUrl ? (
                             <img
-                              src={user.profileImageUrl}
+                              src={normalizeImageUrl(user.profileImageUrl) || "/defaultava.png"}
                               alt={user.username || "User"}
                               className="w-full h-full object-cover"
+                              onError={(e) => {
+                                // Fallback to default if image fails to load
+                                e.currentTarget.src = "/defaultava.png";
+                              }}
                             />
                           ) : (
                             <span className="text-white text-sm">

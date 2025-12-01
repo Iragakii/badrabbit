@@ -15,20 +15,24 @@ export const getApiUrl = (endpoint: string): string => {
 export const normalizeImageUrl = (url: string | null | undefined): string | null => {
   if (!url) return null;
   
-  // If it's already a full URL with localhost, replace it with the API base URL
-  if (url.includes('localhost:8081') || url.includes('127.0.0.1:8081')) {
-    const relativePath = url.replace(/^https?:\/\/[^\/]+/, '');
-    return getApiUrl(relativePath);
+  // If it's already a full HTTPS/HTTP URL
+  if (url.startsWith('https://') || url.startsWith('http://')) {
+    // Replace if it's localhost, otherwise keep the deployed URL
+    if (url.includes('localhost:8081') || url.includes('127.0.0.1:8081')) {
+      // Extract the path part (everything after the domain)
+      const urlObj = new URL(url);
+      const relativePath = urlObj.pathname; // This gives us "/uploads/avatars/..."
+      // Remove leading slash and use getApiUrl
+      const cleanPath = relativePath.startsWith('/') ? relativePath.slice(1) : relativePath;
+      return getApiUrl(cleanPath);
+    }
+    // Already a valid deployed URL, return as-is
+    return url;
   }
   
   // If it's a relative path (starts with /), use getApiUrl
   if (url.startsWith('/')) {
     return getApiUrl(url.slice(1));
-  }
-  
-  // If it's already a full URL (not localhost), return as-is
-  if (url.startsWith('http://') || url.startsWith('https://')) {
-    return url;
   }
   
   // Otherwise, treat as relative path
