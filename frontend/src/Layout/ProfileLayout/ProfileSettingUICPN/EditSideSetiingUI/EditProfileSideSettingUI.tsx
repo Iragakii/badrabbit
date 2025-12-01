@@ -4,9 +4,12 @@ import HeaderEditProfileSide from "./EditSideSettingCPN/HeaderEditProfileSide"
 import FormEditProfileSide from "./EditSideSettingCPN/FormEditProfileSide"
 import FormFooterSaveSlide from "./EditSideSettingCPN/FormFooterSaveSlide"
 import { useAuth } from '../../../../../Auth/AuthContext';
+import { getApiUrl } from '../../../../../config/api';
+import { useNotification } from '../../../../../components/Notification/NotificationContext';
 
 const EditProfileSideSettingUI = () => {
   const { username, bio, website, updateProfile, address, token } = useAuth();
+  const { showSuccess, showError } = useNotification();
   const [formUsername, setFormUsername] = useState(username || '');
   const [formBio, setFormBio] = useState(bio || '');
   const [formWebsite, setFormWebsite] = useState(website || '');
@@ -23,7 +26,7 @@ const EditProfileSideSettingUI = () => {
 
     setIsLoading(true);
     try {
-      const response = await fetch('/api/user/profile', {
+      const response = await fetch(getApiUrl('api/user/profile'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -38,14 +41,17 @@ const EditProfileSideSettingUI = () => {
       });
 
       if (response.ok) {
+        const data = await response.json();
         updateProfile(formUsername, formBio, formWebsite);
-        alert('Profile updated successfully!');
+        showSuccess('Profile updated successfully!');
       } else {
-        alert('Failed to update profile');
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        console.error('Failed to update profile:', errorData);
+        showError(`Failed to update profile: ${errorData.error || 'Unknown error'}`);
       }
     } catch (error) {
       console.error('Error updating profile:', error);
-      alert('Error updating profile');
+      showError(`Error updating profile: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setIsLoading(false);
     }
@@ -53,7 +59,7 @@ const EditProfileSideSettingUI = () => {
 
   return (
     <>
-      <div className="bg-[#091111] w-[128vh] h-[83vh]  rounded-sm border-[#181C14] border overflow-y-scroll overflow-x-hidden flex flex-col">
+      <div className="bg-[#091111] w-[128vh] h-[83vh]  rounded-sm border-[#181C14] border overflow-y-scroll overflow-x-hidden flex flex-col modal-scrollbar">
               <div className="!w-[128vh] flex flex-col items-center justify-center mt-7 flex-grow">
                 <HeaderEditProfileSide></HeaderEditProfileSide>
                  <FormEditProfileSide

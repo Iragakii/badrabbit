@@ -4,6 +4,7 @@ import { useAuth } from "../../../Auth/AuthContext";
 import { useParams, useNavigate } from "react-router-dom";
 import ButtonUploadImg from "./ModalCreateNFTCPN/ButtonUploadImg";
 import { getApiUrl } from "../../config/api";
+import { useNotification } from "../../../components/Notification/NotificationContext";
 
 interface ModalCreateNFTProps {
   onClose: () => void;
@@ -30,6 +31,7 @@ const ModalCreateNFT = ({ onClose, selectedCollection }: ModalCreateNFTProps) =>
   const { address } = useAuth();
   const { walletaddress } = useParams();
   const navigate = useNavigate();
+  const { showSuccess, showError, showWarning } = useNotification();
   const [collections, setCollections] = useState<Collection[]>([]);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
@@ -123,12 +125,12 @@ const ModalCreateNFT = ({ onClose, selectedCollection }: ModalCreateNFTProps) =>
 
   const handleSubmit = async () => {
     if (!selectedFile || !formData.name || !formData.collectionId || !formData.supply) {
-      alert("Please fill in all required fields and select an image");
+      showWarning("Please fill in all required fields and select an image");
       return;
     }
 
     if (!address) {
-      alert("Please connect your wallet");
+      showWarning("Please connect your wallet");
       return;
     }
 
@@ -171,7 +173,7 @@ const ModalCreateNFT = ({ onClose, selectedCollection }: ModalCreateNFTProps) =>
       });
 
       if (response.ok) {
-        alert("NFT created successfully!");
+        showSuccess("NFT created successfully!");
         onClose();
         // Navigate to items page with collection filter to show the new NFT
         if (walletaddress && formData.collectionId) {
@@ -183,11 +185,11 @@ const ModalCreateNFT = ({ onClose, selectedCollection }: ModalCreateNFTProps) =>
       } else {
         const errorText = await response.text();
         console.error("Error response:", errorText);
-        alert("Failed to create NFT");
+        showError("Failed to create NFT");
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("Error creating NFT: " + (error instanceof Error ? error.message : "Unknown error"));
+      showError("Error creating NFT: " + (error instanceof Error ? error.message : "Unknown error"));
     } finally {
       setLoading(false);
     }

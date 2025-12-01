@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useAuth } from "../../../Auth/AuthContext";
 import { getApiUrl } from "../../config/api";
+import { useNotification } from "../../../components/Notification/NotificationContext";
 
 interface ModalMakeOfferProps {
   isOpen: boolean;
@@ -19,6 +20,7 @@ interface ModalMakeOfferProps {
 
 const ModalMakeOffer = ({ isOpen, onClose, item, onOfferCreated }: ModalMakeOfferProps) => {
   const { address } = useAuth();
+  const { showSuccess, showError, showWarning } = useNotification();
   const [offerAmount, setOfferAmount] = useState<string>("0");
   const [duration, setDuration] = useState<string>("30");
   const [priceType, setPriceType] = useState<"topOffer" | "floor">("topOffer");
@@ -90,18 +92,18 @@ const ModalMakeOffer = ({ isOpen, onClose, item, onOfferCreated }: ModalMakeOffe
 
   const handleSubmit = async () => {
     if (!item || !address || !item.ownerWallet) {
-      alert("Missing required information");
+      showError("Missing required information");
       return;
     }
 
     const amount = parseFloat(offerAmount || "0");
     if (amount <= 0) {
-      alert("Please enter a valid offer amount");
+      showWarning("Please enter a valid offer amount");
       return;
     }
 
     if (amount > walletBalance) {
-      alert("Insufficient balance");
+      showError("Insufficient balance");
       return;
     }
 
@@ -124,6 +126,7 @@ const ModalMakeOffer = ({ isOpen, onClose, item, onOfferCreated }: ModalMakeOffe
       if (response.ok) {
         const offerData = await response.json();
         console.log("Offer created:", offerData);
+        showSuccess("Offer created successfully!");
         if (onOfferCreated) {
           onOfferCreated();
         }
@@ -131,11 +134,11 @@ const ModalMakeOffer = ({ isOpen, onClose, item, onOfferCreated }: ModalMakeOffe
       } else {
         const errorText = await response.text();
         console.error("Error creating offer:", errorText);
-        alert("Failed to create offer");
+        showError("Failed to create offer");
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("Error creating offer: " + (error instanceof Error ? error.message : "Unknown error"));
+      showError("Error creating offer: " + (error instanceof Error ? error.message : "Unknown error"));
     } finally {
       setLoading(false);
     }

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { getApiUrl } from '../../../config/api';
+import { useNotification } from '../../../components/Notification/NotificationContext';
 
 const BtnPublishContractColle = ({ selectedFile, collectionData }: {
   selectedFile: File | null;
@@ -11,6 +12,7 @@ const BtnPublishContractColle = ({ selectedFile, collectionData }: {
     ownerWallet: string;
   }
 }) => {
+  const { showSuccess, showError, showWarning } = useNotification();
   const [uploading, setUploading] = useState(false);
 
   const uploadToIPFS = async (file: File) => {
@@ -35,7 +37,7 @@ const BtnPublishContractColle = ({ selectedFile, collectionData }: {
 
   const handlePublish = async () => {
     if (!selectedFile || !collectionData.name || !collectionData.ownerWallet) {
-      alert('Please fill in all required fields and select an image');
+      showWarning('Please fill in all required fields and select an image');
       return;
     }
 
@@ -56,14 +58,14 @@ const BtnPublishContractColle = ({ selectedFile, collectionData }: {
       });
 
       if (response.ok) {
-        alert('Collection created successfully!');
+        showSuccess('Collection created successfully!');
         // Redirect or reset form
       } else {
-        alert('Failed to create collection');
+        showError('Failed to create collection');
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('Error creating collection');
+      showError('Error creating collection');
     } finally {
       setUploading(false);
     }

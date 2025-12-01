@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
+import { getApiUrl } from '../../config/api';
 
 const ERC20_ABI = [
   "function balanceOf(address) view returns (uint256)",
@@ -31,7 +32,7 @@ const USDinWallet = () => {
             const wethBalance = parseFloat(ethers.formatUnits(wethBalanceWei, decimals));
 
             // Fetch ETH price from backend proxy
-          const response = await fetch('/api/price/eth');
+          const response = await fetch(getApiUrl('api/price/eth'));
 if (!response.ok) throw new Error('Failed to fetch price');
 const data = await response.json();
 const ethPrice = data.price; // ✅ extract number field

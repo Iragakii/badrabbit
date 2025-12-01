@@ -1,5 +1,6 @@
 import { useAuth } from "../../../../../../Auth/AuthContext";
 import { getApiUrl } from "../../../../../config/api";
+import { useNotification } from "../../../../../../components/Notification/NotificationContext";
 
 
 
@@ -8,10 +9,11 @@ import { getApiUrl } from "../../../../../config/api";
 
 const ButtonDisconectX = () => {
   const { address,  updateTwitter } = useAuth();
+  const { showSuccess, showError, showWarning } = useNotification();
 
   const handleDisconnectX = async () => {
     if (!address) {
-      alert('Please connect your wallet first');
+      showWarning('Please connect your wallet first');
       return;
     }
 
@@ -26,16 +28,16 @@ const ButtonDisconectX = () => {
       });
 
       if (response.ok) {
-        alert('X account disconnected successfully');
+        showSuccess('X account disconnected successfully');
         // Immediately update the context to reflect disconnection
         updateTwitter(null);
       } else {
         const errorData = await response.json();
-        alert(`Failed to disconnect X account: ${errorData.error || 'Unknown error'}`);
+        showError(`Failed to disconnect X account: ${errorData.error || 'Unknown error'}`);
       }
     } catch (error) {
       console.error('Error disconnecting X account:', error);
-      alert('Error disconnecting X account');
+      showError('Error disconnecting X account');
     }
   };
 

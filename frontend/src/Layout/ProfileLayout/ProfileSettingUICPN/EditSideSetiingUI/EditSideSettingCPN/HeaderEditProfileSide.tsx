@@ -2,10 +2,12 @@ import { useRef } from 'react';
 import { useAuth } from '../../../../../../Auth/AuthContext';
 import UserAvaWhenLog from '../../../../../components/Header/HeaderCPN/WhenUserLoginCPN/UserAvaWhenLog';
 import { getApiUrl } from '../../../../../config/api';
+import { useNotification } from '../../../../../../components/Notification/NotificationContext';
 
 
 const HeaderEditProfileSide = () => {
   const { address, updateAvatar } = useAuth();
+  const { showSuccess, showError } = useNotification();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleUploadClick = () => {
@@ -28,9 +30,18 @@ const HeaderEditProfileSide = () => {
 
       if (response.ok) {
         const data = await response.json();
-        updateAvatar(data.profileImageUrl);
+        // Backend returns User object with profileImageUrl field
+        if (data.profileImageUrl) {
+          updateAvatar(data.profileImageUrl);
+          showSuccess('Avatar uploaded successfully!');
+        } else {
+          console.error('Avatar URL not found in response:', data);
+          showError('Avatar upload failed: Invalid response');
+        }
       } else {
-        console.error('Failed to upload avatar');
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        console.error('Failed to upload avatar:', errorData);
+        showError('Failed to upload avatar. Please try again.');
       }
     } catch (error) {
       console.error('Error uploading avatar:', error);

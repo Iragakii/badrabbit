@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faWallet, faEnvelope } from "@fortawesome/free-solid-svg-icons"
 import { useAuth } from '../../../Auth/AuthContext';
 import { getApiUrl } from '../../config/api';
+import { useNotification } from '../../../components/Notification/NotificationContext';
 
 
 interface ModalLoginProps {
@@ -15,10 +16,11 @@ const ModalLogin = ({ isOpen, onClose }: ModalLoginProps) => {
   const [address, setAddress] = useState<string | null>(null);
   const [isConnecting, setIsConnecting] = useState(false);
   const { login } = useAuth();
+  const { showError, showWarning } = useNotification();
 
   async function connectMetaMask() {
     if (!window.ethereum) {
-      alert("MetaMask not installed!");
+      showWarning("MetaMask not installed!");
       return;
     }
     setIsConnecting(true);
@@ -67,11 +69,11 @@ const ModalLogin = ({ isOpen, onClose }: ModalLoginProps) => {
         onClose(); // Close modal after successful connection
       } else {
         const error = await verifyRes.json();
-        alert("Verification failed: " + error.error);
+        showError("Verification failed: " + error.error);
       }
     } catch (err) {
       console.error(err);
-      alert("Connection failed: " + (err as Error).message);
+      showError("Connection failed: " + (err as Error).message);
     } finally {
       setIsConnecting(false);
     }

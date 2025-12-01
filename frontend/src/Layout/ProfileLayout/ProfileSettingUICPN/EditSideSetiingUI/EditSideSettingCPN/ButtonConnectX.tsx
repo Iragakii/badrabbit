@@ -1,5 +1,6 @@
 import { useAuth } from "../../../../../../Auth/AuthContext";
 import { getApiUrl } from "../../../../../config/api";
+import { useNotification } from "../../../../../../components/Notification/NotificationContext";
 
 
 
@@ -7,10 +8,11 @@ import { getApiUrl } from "../../../../../config/api";
 
 const ButtonConnectX = () => {
   const { address } = useAuth();
+  const { showWarning } = useNotification();
 
   const handleConnectX = () => {
     if (!address) {
-      alert('Please connect your wallet first');
+      showWarning('Please connect your wallet first');
       return;
     }
     // Redirect to backend login endpoint which sends user to X
