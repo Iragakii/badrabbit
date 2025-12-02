@@ -75,8 +75,8 @@ const CollectionCard = ({ collection, price, percentChange }: CollectionCardProp
 
           {/* Middle - Collection Name, Price, and Percentage */}
           <div className="flex flex-col items-end">
-            <div className="text-white font-medium text-sm mb-1">
-              {collection.name}
+            <div className="text-white font-medium text-sm mb-1 truncate max-w-[80px]">
+              {collection.name.length > 8 ? `${collection.name.substring(0, 8)}...` : collection.name}
             </div>
             <div className="flex items-center gap-2">
               {price !== undefined ? (

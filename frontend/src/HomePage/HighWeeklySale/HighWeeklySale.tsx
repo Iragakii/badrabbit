@@ -23,7 +23,7 @@ const HighWeeklySale = () => {
   
   // Group items into pages (6 items per page)
   const itemsPerPage = 6;
-  const totalPages = items.length > 0 ? Math.ceil(items.length / itemsPerPage) : 0;
+  const totalPages = items.length > 0 ? Math.ceil(Math.min(items.length, 10) / itemsPerPage) : 0;
 
   useEffect(() => {
     const fetchWeeklySales = async () => {
@@ -69,7 +69,7 @@ const HighWeeklySale = () => {
             volume: Math.random() * 100, // Mock weekly volume
           }))
           .sort((a: any, b: any) => (b.volume || 0) - (a.volume || 0)) // Sort by volume
-          .slice(0, 24); // Top 24 items (4 pages with 6 items per page)
+          .slice(0, 10); // Top 10 items only
         
         setItems(listedItems);
         setLoading(false);
