@@ -85,7 +85,10 @@ const TempNewsTrending = () => {
     <div className="w-full py-8 px-6">
       <div className="container mx-auto">
         <div className="mb-6">
-          <h2 className="text-3xl font-bold text-white mb-2">Temp News Trending</h2>
+          <div className="flex gap-4">
+            <img src="/read-new.svg" alt="" className="w-10 h-10" />
+          <h2 className="text-3xl font-bold text-white mb-2"> News Trending</h2>
+          </div>
           <p className="text-[#aaabac] font-bold text-lg">Latest updates from the NFT and crypto world</p>
         </div>
 
