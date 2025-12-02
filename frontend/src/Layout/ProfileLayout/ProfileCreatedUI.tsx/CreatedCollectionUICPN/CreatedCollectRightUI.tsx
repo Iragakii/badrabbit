@@ -107,7 +107,7 @@ const CreatedCollectRightUI = () => {
               <div
                 {...provided.droppableProps}
                 ref={provided.innerRef}
-                className="flex flex-col divide-y-[0.2px] divide-gray-800"
+                className="flex flex-col divide-y-[0.2px] divide-gray-800 mb-10"
               >
                 {collections.length === 0 && !loading && (
                   <div className="text-white text-center py-10">No collections found.</div>

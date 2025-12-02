@@ -4,7 +4,7 @@ const DescriptionTextTrendingCard = () => {
   return (
     <>
      <div>
-        <div className='text-[#aaabac] font-bold '>Temp news trending</div>
+        <p className='text-[#aaabac] text-lg'>Temp news trending</p>
      </div>
     </>
   )

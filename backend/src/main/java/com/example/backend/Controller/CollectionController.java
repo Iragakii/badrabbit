@@ -81,7 +81,15 @@ public class CollectionController {
 
     @GetMapping
     public ResponseEntity<List<CollectionModel>> getAllCollections() {
-        return ResponseEntity.ok(collectionRepository.findAll());
+        List<CollectionModel> allCollections = collectionRepository.findAll();
+        // Sort by createdAt descending (newest first), or you can add custom sorting logic
+        allCollections.sort((a, b) -> {
+            if (a.getCreatedAt() == null && b.getCreatedAt() == null) return 0;
+            if (a.getCreatedAt() == null) return 1;
+            if (b.getCreatedAt() == null) return -1;
+            return b.getCreatedAt().compareTo(a.getCreatedAt());
+        });
+        return ResponseEntity.ok(allCollections);
     }
 
     @GetMapping("/owner/{walletAddress}")

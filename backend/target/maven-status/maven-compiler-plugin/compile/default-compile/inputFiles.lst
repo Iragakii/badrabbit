@@ -1,3 +1,4 @@
+D:\destop\main\VS\nft\backend\src\main\java\com\example\backend\repository\FeaturedCollectionRepository.java
 D:\destop\main\VS\nft\backend\src\main\java\com\example\backend\repository\PriceHistoryRepository.java
 D:\destop\main\VS\nft\backend\src\main\java\com\example\backend\Controller\WalletController.java
 D:\destop\main\VS\nft\backend\src\main\java\com\example\backend\Controller\XAuthController.java
@@ -16,15 +17,20 @@ D:\destop\main\VS\nft\backend\src\main\java\com\example\backend\model\Offer.java
 D:\destop\main\VS\nft\backend\src\main\java\com\example\backend\Controller\PriceHistoryController.java
 D:\destop\main\VS\nft\backend\src\main\java\com\example\backend\model\PriceHistory.java
 D:\destop\main\VS\nft\backend\src\main\java\com\example\backend\config\ItemDataLoader.java
+D:\destop\main\VS\nft\backend\src\main\java\com\example\backend\Controller\NewsController.java
 D:\destop\main\VS\nft\backend\src\main\java\com\example\backend\Controller\CollectionController.java
 D:\destop\main\VS\nft\backend\src\main\java\com\example\backend\model\User.java
 D:\destop\main\VS\nft\backend\src\main\java\com\example\backend\repository\CollectionRepository.java
 D:\destop\main\VS\nft\backend\src\main\java\com\example\backend\model\Item.java
 D:\destop\main\VS\nft\backend\src\main\java\com\example\backend\repository\UserRepository.java
 D:\destop\main\VS\nft\backend\src\main\java\com\example\backend\model\CollectionModel.java
+D:\destop\main\VS\nft\backend\src\main\java\com\example\backend\model\FeaturedCollectionModel.java
+D:\destop\main\VS\nft\backend\src\main\java\com\example\backend\Controller\FeaturedCollectionController.java
 D:\destop\main\VS\nft\backend\src\main\java\com\example\backend\BackendApplication.java
 D:\destop\main\VS\nft\backend\src\main\java\com\example\backend\Controller\UserController.java
 D:\destop\main\VS\nft\backend\src\main\java\com\example\backend\Controller\OfferController.java
+D:\destop\main\VS\nft\backend\src\main\java\com\example\backend\repository\NewsRepository.java
+D:\destop\main\VS\nft\backend\src\main\java\com\example\backend\model\NewsModel.java
 D:\destop\main\VS\nft\backend\src\main\java\com\example\backend\model\TwitterModel.java
 D:\destop\main\VS\nft\backend\src\main\java\com\example\backend\Controller\CoinGeckoController.java
 D:\destop\main\VS\nft\backend\src\main\java\com\example\backend\service\ApillonService.java

@@ -16,6 +16,12 @@ public class ItemController {
     @Autowired
     private ItemRepository itemRepository;
 
+    @GetMapping
+    public ResponseEntity<List<Item>> getAllItems() {
+        List<Item> items = itemRepository.findAll();
+        return ResponseEntity.ok(items);
+    }
+
     @GetMapping("/owner/{walletAddress}")
     public ResponseEntity<List<Item>> getItemsByOwner(@PathVariable String walletAddress) {
         List<Item> items = itemRepository.findByOwnerWallet(walletAddress.toLowerCase());

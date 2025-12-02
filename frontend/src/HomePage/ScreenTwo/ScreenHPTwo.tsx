@@ -4,7 +4,7 @@ import TrendingTokensCardContainer from "./TrendingTokens/TrendingTokensCardCont
 const SceenHPTwo = () => {
   return (
     <>
-      <div className="min-h-screen">
+      <div>
         <TrendingTokensCardContainer></TrendingTokensCardContainer>
       </div>
     </>

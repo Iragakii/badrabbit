@@ -4,7 +4,7 @@ const TitleTrendingCard = () => {
   return (
     <>
       <div>
-        <div className="text-white font-bold text-xl ">Trending Tokens</div>
+        <h2 className="text-white font-bold text-3xl">Trending Tokens</h2>
       </div>
     </>
   )
