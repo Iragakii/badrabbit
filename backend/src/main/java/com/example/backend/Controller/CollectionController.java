@@ -2,6 +2,8 @@ package com.example.backend.Controller;
 
 import com.example.backend.model.CollectionModel;
 import com.example.backend.repository.CollectionRepository;
+import com.example.backend.repository.ItemRepository;
+import com.example.backend.repository.PriceHistoryRepository;
 import com.example.backend.service.ApillonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Calendar;
 
 @RestController
 @RequestMapping("/api/collections")
@@ -20,6 +23,12 @@ public class CollectionController {
 
     @Autowired
     private ApillonService apillonService;
+
+    @Autowired
+    private ItemRepository itemRepository;
+
+    @Autowired
+    private PriceHistoryRepository priceHistoryRepository;
 
     @PostMapping
     public ResponseEntity<?> createCollection(@RequestBody CollectionModel collection) {
@@ -113,5 +122,83 @@ public class CollectionController {
         return collectionRepository.findByName(name.trim())
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{id}/stats")
+    public ResponseEntity<?> getCollectionStats(@PathVariable String id) {
+        try {
+            java.util.Optional<CollectionModel> collectionOpt = collectionRepository.findById(id);
+            if (collectionOpt.isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            CollectionModel collection = collectionOpt.get();
+            
+            // Get all items in this collection
+            List<com.example.backend.model.Item> items = itemRepository.findAll().stream()
+                    .filter(item -> item.getCollectionName() != null && 
+                            item.getCollectionName().equalsIgnoreCase(collection.getName()))
+                    .collect(java.util.stream.Collectors.toList());
+
+            // Calculate stats from list prices and price history
+            double currentPrice = 0.0;
+            double previousPrice = 0.0;
+            double percentChange = 0.0;
+
+            // Get floor price (minimum list price) from items in this collection
+            List<Double> listPrices = items.stream()
+                    .filter(item -> item.getListPrice() != null && item.getListPrice() > 0)
+                    .map(item -> item.getListPrice())
+                    .collect(java.util.stream.Collectors.toList());
+            
+            if (!listPrices.isEmpty()) {
+                // Floor price is the minimum (lowest) list price
+                currentPrice = listPrices.stream().mapToDouble(Double::doubleValue).min().orElse(0.0);
+            }
+
+            // Get recent sales for items in this collection (last 7 days) for comparison
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.DAY_OF_MONTH, -7);
+            Date weekAgo = cal.getTime();
+
+            // Get all price history and filter by items in this collection
+            List<com.example.backend.model.PriceHistory> allHistory = priceHistoryRepository.findAll();
+            List<String> itemIds = items.stream()
+                    .map(item -> item.getId())
+                    .collect(java.util.stream.Collectors.toList());
+            
+            List<com.example.backend.model.PriceHistory> recentSales = allHistory.stream()
+                    .filter(ph -> ph.getType() != null && ph.getType().equals("sale") && 
+                            ph.getTimestamp() != null && ph.getTimestamp().after(weekAgo) &&
+                            itemIds.contains(ph.getItemId()))
+                    .sorted((a, b) -> b.getTimestamp().compareTo(a.getTimestamp()))
+                    .collect(java.util.stream.Collectors.toList());
+
+            // If no list price, use most recent sale
+            if (currentPrice == 0.0 && !recentSales.isEmpty()) {
+                currentPrice = recentSales.get(0).getPrice() != null ? recentSales.get(0).getPrice() : 0.0;
+            }
+            
+            // Get price from 7 days ago for comparison
+            if (recentSales.size() > 1) {
+                previousPrice = recentSales.get(recentSales.size() - 1).getPrice() != null ? 
+                        recentSales.get(recentSales.size() - 1).getPrice() : 0.0;
+            }
+            
+            if (previousPrice > 0 && currentPrice > 0) {
+                percentChange = ((currentPrice - previousPrice) / previousPrice) * 100;
+            }
+
+            Map<String, Object> stats = Map.of(
+                    "currentPrice", currentPrice,
+                    "percentChange", percentChange,
+                    "itemCount", items.size()
+            );
+
+            return ResponseEntity.ok(stats);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError()
+                    .body(Map.of("error", "Failed to calculate stats: " + e.getMessage()));
+        }
     }
 }

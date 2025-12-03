@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import UserAvaWhenLog from './UserAvaWhenLog'
 import MetaMaskAddress from '../../../MetaMaskAddress/MetaMaskAddress'
 import ArrowSlide from './ArrowSlide'
@@ -10,6 +11,7 @@ import { useAuth } from '../../../../../Auth/AuthContext'
 
 const WhenUserLogContainer = () => {
   const { address } = useAuth();
+  const [isSlideHovered, setIsSlideHovered] = useState(false);
 
   return (
     <>
@@ -22,7 +24,11 @@ const WhenUserLogContainer = () => {
           <Notification></Notification>
         </div>
 
-        <div className="relative group">
+        <div 
+          className="relative"
+          onMouseEnter={() => setIsSlideHovered(true)}
+          onMouseLeave={() => setIsSlideHovered(false)}
+        >
           <Link underline="none" href={`/${address || 'profile'}`}>
             <div className="no-underline border-l-1 rounded-l-none border-[#181C14] flex py-[2px] pt-[4px] rounded-md px-3 cursor-pointer hover:bg-[#ffffff]/8">
               <div className='w-7 h-7'>
@@ -41,10 +47,22 @@ const WhenUserLogContainer = () => {
             </div>
           </Link>
 
-          {/* Dropdown - moved outside Link and positioned relative to parent div */}
-          <div className="absolute top-full right-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-10">
-            <SlideLoginFormContainer />
-          </div>
+          {/* Invisible bridge to prevent gap between trigger and slide */}
+          <div 
+            className="absolute top-full right-0 w-full h-2 pointer-events-auto"
+            onMouseEnter={() => setIsSlideHovered(true)}
+          />
+          
+          {/* Dropdown - using state instead of group-hover */}
+          {isSlideHovered && (
+            <div 
+              className="absolute top-full right-0 pt-2 z-[99999] pointer-events-auto"
+              onMouseEnter={() => setIsSlideHovered(true)}
+              onMouseLeave={() => setIsSlideHovered(false)}
+            >
+              <SlideLoginFormContainer />
+            </div>
+          )}
         </div>
       </div>
     </>

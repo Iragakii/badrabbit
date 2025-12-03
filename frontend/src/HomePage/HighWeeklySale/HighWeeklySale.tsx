@@ -21,9 +21,11 @@ const HighWeeklySale = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const navigate = useNavigate();
   
-  // Group items into pages (6 items per page)
-  const itemsPerPage = 6;
+  // Group items into pages (4 items per page to ensure pagination works with 5-6 items)
+  const itemsPerPage = 4;
   const totalPages = items.length > 0 ? Math.ceil(Math.min(items.length, 10) / itemsPerPage) : 0;
+  // Show arrows if there are more than 4 items (so 5+ items will show arrows)
+  const showArrows = items.length > 4;
 
   useEffect(() => {
     const fetchWeeklySales = async () => {
@@ -60,15 +62,47 @@ const HighWeeklySale = () => {
           allItems = itemsArrays.flat();
         }
         
-        // Filter listed items and add mock volume/price data
-        const listedItems = allItems
-          .filter((item: any) => item.listed)
-          .map((item: any) => ({
-            ...item,
-            price: Math.random() * 5, // Mock price
-            volume: Math.random() * 100, // Mock weekly volume
-          }))
-          .sort((a: any, b: any) => (b.volume || 0) - (a.volume || 0)) // Sort by volume
+        // Filter listed items and fetch real stats
+        const listedItemsWithStats = await Promise.all(
+          allItems
+            .filter((item: any) => item.listed)
+            .slice(0, 10)
+            .map(async (item: any) => {
+              try {
+                // Fetch item stats from backend
+                const statsRes = await fetch(getApiUrl(`api/items/${item.id || item._id}/stats`));
+                if (statsRes.ok) {
+                  const stats = await statsRes.json();
+                  return {
+                    ...item,
+                    price: stats.currentPrice || undefined,
+                    volume: stats.weeklyVolume || undefined,
+                  };
+                }
+              } catch (err) {
+                // Silently fail - stats endpoint may not be available yet
+              }
+              // Return without price/volume if stats fetch fails
+              return {
+                ...item,
+                price: undefined,
+                volume: undefined,
+              };
+            })
+        );
+        
+        // Sort by volume descending, then by price
+        const listedItems = listedItemsWithStats
+          .sort((a: any, b: any) => {
+            const volumeA = a.volume ?? 0;
+            const volumeB = b.volume ?? 0;
+            if (Math.abs(volumeA - volumeB) > 0.01) {
+              return volumeB - volumeA; // Sort by volume
+            }
+            const priceA = a.price ?? 0;
+            const priceB = b.price ?? 0;
+            return priceB - priceA; // Then by price
+          })
           .slice(0, 10); // Top 10 items only
         
         setItems(listedItems);
@@ -90,13 +124,13 @@ const HighWeeklySale = () => {
   };
 
   const nextPage = () => {
-    if (totalPages > 1) {
+    if (showArrows && totalPages > 0) {
       setCurrentPage((prev) => (prev + 1) % totalPages);
     }
   };
 
   const prevPage = () => {
-    if (totalPages > 1) {
+    if (showArrows && totalPages > 0) {
       setCurrentPage((prev) => (prev - 1 + totalPages) % totalPages);
     }
   };
@@ -141,7 +175,7 @@ const HighWeeklySale = () => {
         {/* Carousel Container with Navigation */}
         <div className="relative">
           {/* Navigation Arrows */}
-          {totalPages > 1 && (
+          {showArrows && (
             <>
               <button
                 onClick={prevPage}
@@ -257,7 +291,7 @@ const HighWeeklySale = () => {
           </div>
 
           {/* Dots Indicator */}
-          {totalPages > 1 && (
+          {showArrows && totalPages > 1 && (
             <div className="flex justify-center gap-2 mt-6">
               {Array.from({ length: totalPages }).map((_, index) => (
                 <button

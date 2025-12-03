@@ -23,6 +23,8 @@ public class Item {
     private String chainName;
     private String chainIcon;
     private boolean listed;
+    private Double listPrice;        // Listing price in ETH
+    private Date listExpiresAt;      // Listing expiration date
     private Integer supply;          // Number of copies/editions
     private String description;      // Optional description
     private Date createdAt;

@@ -3,10 +3,8 @@ import { useParams } from 'react-router-dom';
 import ProfileFirstFilerItem from "./ProfileItemsUiCPN/ProfileFirstFilerItem";
 import ProfileSecFilterItem from "./ProfileItemsUiCPN/ProfileSecFilterItem";
 import ItemsGrid from "./ProfileItemsUiCPN/ScreenTwo/CardCPN/Mansory/ItemsGrid";
-import { useAuth } from '../../../../Auth/AuthContext';
 
 const ProfileItemsUI = () => {
-  const { isLoggedIn, address } = useAuth();
   const { walletaddress } = useParams();
 
   // Show items for the wallet address in URL (can be any user, not just logged-in user)

@@ -4,7 +4,8 @@ import UserAvaWhenLog from "../UserAvaWhenLog";
 import { ethers } from "ethers";
 import PrimaryWalletIcon from "../../../../PrimaryWallet/PrimaryWalletIcon";
 
-import USDinWallet from "../../../../TotalMetaMaskWallet/USDinWallet";
+
+import USDDisplay from "../../../../TotalMetaMaskWallet/USDDisplay";
 
 const SecondSlideLogForm = () => {
   const [address, setAddress] = useState<string | null>(null);
@@ -51,7 +52,7 @@ useEffect(() => {
           <div><PrimaryWalletIcon></PrimaryWalletIcon> </div>
         </div>
           <div>
-            <USDinWallet></USDinWallet>
+            <USDDisplay></USDDisplay>
           </div>
         </div>
         <div>

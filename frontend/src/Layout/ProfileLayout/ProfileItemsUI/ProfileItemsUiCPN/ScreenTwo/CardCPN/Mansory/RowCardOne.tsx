@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "../../../../../../../../Auth/AuthContext";
+import ModalListItem from "../../../../../../../Modal/ModalListItem/ModalListItem";
 
 interface MediaCardProps {
   imageUrl: string;
@@ -11,18 +13,10 @@ interface MediaCardProps {
   collectionName?: string;
   itemId?: string | number;
   contractAddress?: string;
+  ownerWallet?: string;
+  listed?: boolean;
+  listPrice?: number;
 }
-
-// Generate tokenId from item ID (hash-based conversion)
-const generateTokenId = (itemId: string | number | undefined): string => {
-  if (!itemId) return "0";
-  const idStr = String(itemId);
-  // Convert MongoDB ObjectId to a numeric tokenId
-  const hash = idStr.split('').reduce((acc, char) => {
-    return ((acc << 5) - acc) + char.charCodeAt(0);
-  }, 0);
-  return Math.abs(hash).toString();
-};
 
 const RowCardOne: React.FC<MediaCardProps> = ({
   imageUrl,
@@ -34,13 +28,26 @@ const RowCardOne: React.FC<MediaCardProps> = ({
   collectionName = "Collection Name",
   itemId,
   contractAddress,
+  ownerWallet,
+  listed = false,
+  listPrice,
 }) => {
   const navigate = useNavigate();
   const { walletaddress } = useParams<{ walletaddress?: string }>();
+  const { address } = useAuth();
+  const [showListItem, setShowListItem] = useState(false);
+  
+  // Check if logged-in user owns this NFT
+  const normalizedAddress = address?.toLowerCase().trim();
+  const normalizedOwnerWallet = ownerWallet?.toLowerCase().trim();
+  const isOwner = normalizedAddress && normalizedOwnerWallet && 
+    normalizedAddress === normalizedOwnerWallet;
+  
+  // Default to not listed if not specified
+  const isListed = listed ?? false;
 
   const handleClick = () => {
     if (!itemId || !walletaddress) return;
-    const tokenId = generateTokenId(itemId);
     // Use contractAddress if provided, otherwise use a default placeholder
     const finalContractAddress = contractAddress || "0x0000000000000000000000000000000000000000";
     navigate(`/${walletaddress}/item/${itemId}/${finalContractAddress}`);
@@ -89,18 +96,83 @@ const RowCardOne: React.FC<MediaCardProps> = ({
           {collectionName}
         </div>
 
-        {/* Listed + sliding button */}
+        {/* Status: Listed / Not Listed / Make Offer / List Item */}
         <div className="relative mt-1 h-6">
-          {/* Listed text */}
-          <div className="absolute inset-0 flex items-center justify-center text-xs text-gray-400 bg-black/20 rounded">
-            Listed
-          </div>
-          {/* Make Offer button (hidden by default) */}
-          <button className="absolute inset-0 flex items-center justify-center bg-green-500 text-white text-xs font-semibold rounded transform translate-y-full opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 cursor-pointer">
-            Make Offer
-          </button>
+          {isOwner ? (
+            // Owner view: Show "List Item" button if not listed, "Listed" if listed
+            <>
+              <div className="absolute inset-0 flex items-center justify-center gap-2 text-xs text-white bg-black/20 rounded">
+                {isListed ? (
+                  <>
+                    <span>Listed</span>
+                    {listPrice && listPrice > 0 && (
+                      <span className="font-semibold">{listPrice.toFixed(4)} ETH</span>
+                    )}
+                  </>
+                ) : (
+                  <span className="text-gray-400">Not Listed</span>
+                )}
+              </div>
+              {!isListed && (
+                <button 
+                  className="absolute inset-0 flex items-center justify-center bg-green-500 text-white text-xs font-semibold rounded transform translate-y-full opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 cursor-pointer"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowListItem(true);
+                  }}
+                >
+                  List Item
+                </button>
+              )}
+            </>
+          ) : (
+            // Non-owner view: Show "Not Listed" by default, "Make Offer" on hover if listed
+            <>
+              <div className="absolute inset-0 flex items-center justify-center gap-2 text-xs text-white bg-black/20 rounded">
+                {isListed ? (
+                  <>
+                    <span>Listed</span>
+                    {listPrice && listPrice > 0 && (
+                      <span className="font-semibold">{listPrice.toFixed(4)} ETH</span>
+                    )}
+                  </>
+                ) : (
+                  <span className="text-gray-400">Not Listed</span>
+                )}
+              </div>
+              {isListed && (
+                <button 
+                  className="absolute inset-0 flex items-center justify-center bg-green-500 text-white text-xs font-semibold rounded transform translate-y-full opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 cursor-pointer"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleClick();
+                  }}
+                >
+                  Make Offer
+                </button>
+              )}
+            </>
+          )}
         </div>
       </div>
+      
+      {/* Modal List Item */}
+      <ModalListItem
+        isOpen={showListItem}
+        onClose={() => setShowListItem(false)}
+        item={{
+          id: itemId?.toString(),
+          _id: itemId?.toString(),
+          name: itemName,
+          imageUrl: imageUrl,
+          collectionName: collectionName,
+          ownerWallet: ownerWallet,
+        }}
+        onListed={() => {
+          // Refresh page or update parent component
+          window.location.reload();
+        }}
+      />
     </div>
   );
 };

@@ -7,6 +7,7 @@ import ProfileSettingUI from "./Layout/ProfileLayout/ProfileSettingUICPN/Profile
 import XConnectCallbackUI from "./Layout/ProfileLayout/XConnectCallbackUI/XConnectCallbackUI.tsx"
 import CreateCollectionLayout from './Layout/CreateCollectionLayout/CreateCollectionLayout.tsx'
 import { NotificationProvider } from './components/Notification/NotificationContext.tsx'
+import { WalletProvider } from './contexts/WalletContext.tsx'
 
 function AppRoutes() {
   const { isLoggedIn } = useAuth();
@@ -75,9 +76,11 @@ function AppRoutes() {
 function App() {
   return (
     <AuthProvider>
-      <NotificationProvider>
-        <AppRoutes />
-      </NotificationProvider>
+      <WalletProvider>
+        <NotificationProvider>
+          <AppRoutes />
+        </NotificationProvider>
+      </WalletProvider>
     </AuthProvider>
   )
 }

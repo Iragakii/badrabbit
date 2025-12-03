@@ -166,7 +166,7 @@ const ModalCreateNFT = ({ onClose, selectedCollection }: ModalCreateNFTProps) =>
           imageUrl: ipfsUrl,
           chainName: formData.chainName,
           chainIcon: formData.chainIcon,
-          listed: true,
+          listed: false, // Default to not listed when creating
           supply: parseInt(formData.supply) || 1,
           description: formData.description,
         }),

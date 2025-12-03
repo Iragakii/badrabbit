@@ -14,6 +14,9 @@ type ItemType = {
   chainIcon: string;
   chainName?: string;
   collectionName?: string;
+  ownerWallet?: string;
+  listed?: boolean;
+  listPrice?: number;
 };
 
 interface ItemsGridProps {
@@ -234,6 +237,9 @@ const ItemsGrid = ({ walletaddress }: ItemsGridProps) => {
                 collectionName={item.collectionName || "Unnamed Collection"}
                 itemId={itemId}
                 contractAddress={contractAddress}
+                ownerWallet={item.ownerWallet}
+                listed={item.listed}
+                listPrice={item.listPrice}
               />
                <div className="mt-7"></div>
             </div>
